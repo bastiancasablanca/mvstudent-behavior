@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>บันทึกพฤติกรรมนักเรียน ปีการศึกษา 2569</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-deep: #1a3a2a;
+    --green-mid: #2d5a3d;
+    --green-light: #4a8c5c;
+    --green-pale: #c8e6c9;
+    --green-ghost: #f0f7f1;
+    --accent: #ff6b35;
+    --accent-soft: #fff0eb;
+    --text-dark: #111a14;
+    --text-mid: #3d5a47;
+    --text-light: #7a9e87;
+    --border: #c2d9c8;
+    --white: #ffffff;
+    --shadow: 0 4px 24px rgba(26,58,42,0.10);
+    --shadow-lg: 0 8px 40px rgba(26,58,42,0.16);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: var(--green-ghost);
+    min-height: 100vh;
+    color: var(--text-dark);
+  }
+
+  /* HEADER */
+  header {
+    background: var(--green-deep);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: 40px;
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+  }
+  .header-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 28px 24px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .header-icon {
+    width: 48px; height: 48px;
+    background: var(--green-light);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .header-text h1 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.3;
+  }
+  .header-text p {
+    font-size: 13px;
+    color: var(--green-pale);
+    margin-top: 2px;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.5px;
+  }
+
+  /* TABS */
+  .tabs {
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0;
+    background: var(--green-mid);
+    border-bottom: 2px solid var(--green-light);
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 12px 0;
+    background: transparent;
+    border: none;
+    color: var(--green-pale);
+    font-family: 'Sarabun', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .tab-btn.active {
+    color: #fff;
+    background: rgba(255,255,255,0.08);
+  }
+  .tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+  }
+
+  /* MAIN CONTENT */
+  .content {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+  }
+
+  /* SETUP BANNER */
+  .setup-banner {
+    background: linear-gradient(135deg, #fff8e1, #fff3cd);
+    border: 1.5px solid #ffc107;
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 22px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .setup-banner .icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .setup-banner .text { font-size: 13px; line-height: 1.7; color: #5d4037; }
+  .setup-banner .text strong { display: block; font-size: 14px; color: #3e2723; margin-bottom: 4px; }
+  .setup-banner .text code {
+    background: rgba(0,0,0,0.08);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    word-break: break-all;
+  }
+
+  /* SCRIPT URL INPUT */
+  .url-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 22px;
+    align-items: center;
+  }
+  .url-row input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    background: #fff;
+    color: var(--text-dark);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .url-row input:focus { border-color: var(--green-light); }
+  .url-row input::placeholder { color: var(--text-light); }
+  .url-save-btn {
+    padding: 10px 16px;
+    background: var(--green-mid);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+  .url-save-btn:hover { background: var(--green-light); }
+
+  /* CARD */
+  .card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--green-deep);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px; height: 18px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+
+  /* FORM */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .form-group.full { grid-column: 1 / -1; }
+  label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-mid);
+  }
+  .required::after { content: ' *'; color: var(--accent); }
+  input[type="text"], input[type="date"], select, textarea {
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 14px;
+    color: var(--text-dark);
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+    -webkit-appearance: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--green-light);
+    box-shadow: 0 0 0 3px rgba(74,140,92,0.12);
+  }
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234a8c5c' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 34px;
+    cursor: pointer;
+  }
+  textarea { resize: vertical; min-height: 80px; }
+
+  /* SUBMIT BUTTON */
+  .submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--green-deep);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 20px;
+    letter-spacing: 0.4px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .submit-btn:hover { background: var(--green-mid); }
+  .submit-btn:active { transform: scale(0.99); }
+  .submit-btn:disabled { background: var(--text-light); cursor: not-allowed; }
+  .submit-btn .spinner {
+    display: none;
+    width: 18px; height: 18px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto;
+  }
+  .submit-btn.loading .btn-text { display: none; }
+  .submit-btn.loading .spinner { display: block; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--green-deep);
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: var(--shadow-lg);
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    z-index: 999;
+    white-space: nowrap;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.error { background: #c62828; }
+
+  /* RECORDS TAB */
+  .search-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .search-row input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 14px;
+    outline: none;
+  }
+  .search-row input:focus { border-color: var(--green-light); }
+  .load-btn {
+    padding: 10px 18px;
+    background: var(--green-light);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+  .load-btn:hover { background: var(--green-mid); }
+
+  .records-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .record-card {
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    transition: border-color 0.2s;
+  }
+  .record-card:hover { border-color: var(--green-light); }
+  .record-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+  .record-name { font-weight: 700; font-size: 15px; color: var(--green-deep); }
+  .record-date { font-size: 12px; color: var(--text-light); font-family: 'IBM Plex Mono', monospace; }
+  .record-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+  .tag {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .tag-type { background: var(--green-pale); color: var(--green-deep); }
+  .tag-result { background: var(--accent-soft); color: var(--accent); }
+  .tag-class { background: #e3f2fd; color: #1565c0; }
+  .record-note { font-size: 13px; color: var(--text-mid); margin-top: 4px; }
+
+  .empty-state {
+    text-align: center;
+    padding: 48px 16px;
+    color: var(--text-light);
+  }
+  .empty-state .emoji { font-size: 40px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; }
+
+  /* STATUS BAR */
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .status-bar.connected { background: #e8f5e9; color: #2e7d32; }
+  .status-bar.disconnected { background: #fce4ec; color: #c62828; }
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .connected .status-dot { background: #4caf50; }
+  .disconnected .status-dot { background: #ef5350; }
+
+  @media (max-width: 480px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .form-group.full { grid-column: 1; }
+    .header-inner { padding: 20px 16px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-icon">📋</div>
+    <div class="header-text">
+      <h1>บันทึกพฤติกรรมนักเรียน</h1>
+      <p>ปีการศึกษา 2569</p>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('form')">📝 บันทึกข้อมูล</button>
+    <button class="tab-btn" onclick="switchTab('records')">📂 ดูบันทึกทั้งหมด</button>
+    <button class="tab-btn" id="setupTabBtn" onclick="switchTab('setup')" style="display:none">⚙️ ตั้งค่า</button>
+  </div>
+</header>
+
+<div class="content">
+
+  <!-- ===== FORM TAB ===== -->
+  <div id="tab-form">
+
+    <div class="card">
+      <div class="card-title">ข้อมูลนักเรียน</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="required">วันที่</label>
+          <input type="date" id="date">
+        </div>
+        <div class="form-group">
+          <label class="required">ชั้น</label>
+          <input type="text" id="class" placeholder="เช่น ม.3/2">
+        </div>
+        <div class="form-group full">
+          <label class="required">เลขประจำตัวนักเรียน</label>
+          <input type="text" id="studentId" placeholder="เช่น 12345">
+        </div>
+        <div class="form-group full">
+          <label class="required">ชื่อ – สกุลนักเรียน</label>
+          <input type="text" id="name" placeholder="ชื่อ นามสกุล">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">รายละเอียดพฤติกรรม</div>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label class="required">ประเภทความผิดนักเรียน</label>
+          <select id="offenseType">
+            <option value="">— เลือกประเภทความผิด —</option>
+            <option value="โทรศัพท์">📱 โทรศัพท์</option>
+            <option value="ชู้สาว">💔 ชู้สาว</option>
+            <option value="ทะเลาะวิวาท">⚡ ทะเลาะวิวาท</option>
+            <option value="ขโมยของ">🚨 ขโมยของ</option>
+            <option value="ยาเสพติด">⚠️ ยาเสพติด</option>
+            <option value="อื่นๆ">📌 อื่นๆ</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label class="required">ผลการตัดสิน</label>
+          <select id="verdict">
+            <option value="">— เลือกผลการตัดสิน —</option>
+            <option value="หัก 5 คะแนน">📉 หัก 5 คะแนน</option>
+            <option value="หัก 10 คะแนน">📉 หัก 10 คะแนน</option>
+            <option value="หัก 15 คะแนน">📉 หัก 15 คะแนน</option>
+            <option value="หัก 20 คะแนน">📉 หัก 20 คะแนน</option>
+            <option value="ทัณฑ์บน">📜 ทัณฑ์บน</option>
+            <option value="เขียนหนังสือขอความอนุเคราะห์">✍️ เขียนหนังสือขอความอนุเคราะห์</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>เหตุการณ์ / โปรดระบุ</label>
+          <textarea id="reason" placeholder="อธิบายเหตุการณ์โดยละเอียด..."></textarea>
+        </div>
+        <div class="form-group full">
+          <label>อื่นๆ</label>
+          <input type="text" id="other" placeholder="หมายเหตุเพิ่มเติม">
+        </div>
+      </div>
+
+      <button class="submit-btn" id="submitBtn" onclick="submitRecord()">
+        <span class="btn-text">💾 บันทึกข้อมูล</span>
+        <div class="spinner"></div>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== RECORDS TAB ===== -->
+  <div id="tab-records" style="display:none">
+    <div class="card">
+      <div class="card-title">ค้นหาบันทึก</div>
+      <div class="search-row">
+        <input type="text" id="searchInput" placeholder="ค้นหาชื่อ, เลขประจำตัว, ชั้น...">
+        <button class="load-btn" onclick="loadRecords()">🔍 โหลด</button>
+      </div>
+      <div id="recordsList" class="records-list">
+        <div class="empty-state">
+          <div class="emoji">📂</div>
+          <p>กดปุ่ม "โหลด" เพื่อดึงข้อมูลจาก Google Sheets</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SETUP TAB ===== -->
+  <div id="tab-setup" style="display:none">
+    <div class="card">
+      <div class="card-title">ตั้งค่า Google Apps Script URL</div>
+      <div class="setup-banner">
+        <div class="icon">📖</div>
+        <div class="text">
+          <strong>วิธีตั้งค่า (ทำครั้งเดียว)</strong>
+          1. เปิด Google Sheets แล้วไปที่ <strong>ส่วนขยาย → Apps Script</strong><br>
+          2. วางโค้ด Apps Script ที่ด้านล่างนี้ลงไป<br>
+          3. กด <strong>Deploy → New deployment → Web app</strong><br>
+          4. ตั้ง "Who has access" เป็น <strong>Anyone</strong><br>
+          5. คัดลอก URL ที่ได้มาวางในช่องด้านล่าง
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom:14px">
+        <label>Google Apps Script URL</label>
+        <div class="url-row">
+          <input type="text" id="scriptUrl" placeholder="https://script.google.com/macros/s/.../exec">
+          <button class="url-save-btn" onclick="saveUrl()">บันทึก</button>
+        </div>
+      </div>
+
+      <div style="background:#f5f5f5;border-radius:12px;padding:16px;margin-top:8px">
+        <div style="font-size:13px;font-weight:700;color:#333;margin-bottom:10px;font-family:'IBM Plex Mono',monospace;">📜 Apps Script Code — คัดลอกทั้งหมดนี้</div>
+        <pre id="scriptCode" style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#1a3a2a;white-space:pre-wrap;line-height:1.6;overflow-x:auto;background:transparent"></pre>
+        <button onclick="copyScript()" style="margin-top:10px;padding:8px 16px;background:var(--green-deep);color:#fff;border:none;border-radius:8px;font-family:'Sarabun',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">📋 คัดลอกโค้ด</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast">
+  <span id="toastIcon">✅</span>
+  <span id="toastMsg">บันทึกสำเร็จ</span>
+</div>
+
+<script>
+// ===== APPS SCRIPT CODE =====
+const APPS_SCRIPT_CODE = `function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("บันทึก") || SpreadsheetApp.getActiveSpreadsheet().insertSheet("บันทึก");
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(["วันที่","เลขประจำตัว","ชื่อ-สกุล","ชั้น","ประเภทความผิด","ผลการตัดสิน","เหตุการณ์","อื่นๆ","Timestamp"]);
+    sheet.getRange(1,1,1,9).setFontWeight("bold").setBackground("#4a8c5c").setFontColor("#ffffff");
+  }
+  var data = JSON.parse(e.postData.contents);
+  sheet.appendRow([data.date,data.studentId,data.name,data.class,data.offenseType,data.verdict,data.reason,data.other,new Date().toISOString()]);
+  return ContentService.createTextOutput(JSON.stringify({status:"ok"})).setMimeType(ContentService.MimeType.JSON);
+}
+
+function doGet(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("บันทึก");
+  if (!sheet) return ContentService.createTextOutput(JSON.stringify({records:[]})).setMimeType(ContentService.MimeType.JSON);
+  var data = sheet.getDataRange().getValues();
+  var headers = data[0];
+  var records = [];
+  for (var i = 1; i < data.length; i++) {
+    var row = {};
+    headers.forEach(function(h, j) { row[h] = data[i][j]; });
+    records.push(row);
+  }
+  var query = (e.parameter.q || "").toLowerCase();
+  if (query) {
+    records = records.filter(function(r) {
+      return Object.values(r).some(function(v){ return String(v).toLowerCase().includes(query); });
+    });
+  }
+  return ContentService.createTextOutput(JSON.stringify({records:records})).setMimeType(ContentService.MimeType.JSON);
+}`;
+
+document.getElementById('scriptCode').textContent = APPS_SCRIPT_CODE;
+
+// ===== STATE =====
+let scriptUrl = 'https://script.google.com/macros/s/AKfycbx7Sk0vB9fXz1BqblAqgcyVGxNj1-bFhquZAScp2yDkpkFEY0eTFWpj7cxx9i7GJubJ/exec';
+
+function init() {
+  // Set today's date
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('date').value = today;
+  // Secret admin: click header icon 5 times to reveal setup tab
+  let clicks = 0;
+  document.querySelector('.header-icon').addEventListener('click', () => {
+    clicks++;
+    if (clicks >= 5) { document.getElementById('setupTabBtn').style.display = 'block'; }
+  });
+}
+
+function setStatus(state) {
+  const msgs = {
+    connected: 'เชื่อมต่อ Google Sheets แล้ว ✓',
+    disconnected: 'ยังไม่ได้เชื่อมต่อ Google Sheets — กรุณาตั้งค่า Script URL ก่อน'
+  };
+  ['status-form','status-records'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.className = 'status-bar ' + state;
+      el.querySelector('span').textContent = msgs[state];
+    }
+  });
+}
+
+// ===== TABS =====
+function switchTab(tab) {
+  ['form','records','setup'].forEach(t => {
+    document.getElementById('tab-'+t).style.display = t===tab ? 'block' : 'none';
+  });
+  document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', ['form','records','setup'][i]===tab);
+  });
+}
+
+// ===== SETUP =====
+function saveUrl() {
+  const val = document.getElementById('scriptUrl').value.trim();
+  if (!val || !val.startsWith('https://')) { showToast('❌ URL ไม่ถูกต้อง', true); return; }
+  scriptUrl = val;
+  localStorage.setItem('gs_script_url', val);
+  showToast('✅ บันทึก URL สำเร็จ');
+}
+
+function copyScript() {
+  navigator.clipboard.writeText(APPS_SCRIPT_CODE).then(() => showToast('📋 คัดลอกโค้ดสำเร็จ'));
+}
+
+// ===== SUBMIT =====
+async function submitRecord() {
+  if (!scriptUrl) { showToast('❌ ไม่พบ Script URL', true); return; }
+
+  const data = {
+    date: document.getElementById('date').value,
+    studentId: document.getElementById('studentId').value.trim(),
+    name: document.getElementById('name').value.trim(),
+    class: document.getElementById('class').value.trim(),
+    offenseType: document.getElementById('offenseType').value,
+    verdict: document.getElementById('verdict').value,
+    reason: document.getElementById('reason').value.trim(),
+    other: document.getElementById('other').value.trim()
+  };
+
+  if (!data.date || !data.studentId || !data.name || !data.class || !data.offenseType || !data.verdict) {
+    showToast('❌ กรุณากรอกข้อมูลที่จำเป็นให้ครบ', true); return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.classList.add('loading'); btn.disabled = true;
+
+  try {
+    const res = await fetch(scriptUrl, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: { 'Content-Type': 'application/json' }
+    });
+    const json = await res.json();
+    if (json.status === 'ok') {
+      showToast('✅ บันทึกข้อมูลสำเร็จ');
+      clearForm();
+    } else { showToast('❌ เกิดข้อผิดพลาด', true); }
+  } catch (err) {
+    // CORS workaround: Apps Script POST returns opaque response; use no-cors
+    try {
+      await fetch(scriptUrl, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } });
+      showToast('✅ ส่งข้อมูลแล้ว (กรุณาตรวจสอบใน Sheet)');
+      clearForm();
+    } catch(e2) { showToast('❌ ไม่สามารถเชื่อมต่อได้: ' + e2.message, true); }
+  } finally {
+    btn.classList.remove('loading'); btn.disabled = false;
+  }
+}
+
+function clearForm() {
+  ['studentId','name','class','reason','other'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('offenseType').value='';
+  document.getElementById('verdict').value='';
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('date').value = today;
+}
+
+// ===== LOAD RECORDS =====
+async function loadRecords() {
+  if (!scriptUrl) { showToast('❌ ไม่พบ Script URL', true); return; }
+  const q = document.getElementById('searchInput').value.trim();
+  const url = scriptUrl + (q ? '?q=' + encodeURIComponent(q) : '');
+  document.getElementById('recordsList').innerHTML = '<div class="empty-state"><div class="emoji">⏳</div><p>กำลังโหลด...</p></div>';
+
+  try {
+    const res = await fetch(url);
+    const json = await res.json();
+    renderRecords(json.records || []);
+  } catch(e) {
+    document.getElementById('recordsList').innerHTML = '<div class="empty-state"><div class="emoji">❌</div><p>ไม่สามารถโหลดข้อมูลได้<br><small>' + e.message + '</small></p></div>';
+  }
+}
+
+function renderRecords(records) {
+  const container = document.getElementById('recordsList');
+  if (!records.length) {
+    container.innerHTML = '<div class="empty-state"><div class="emoji">🔍</div><p>ไม่พบบันทึก</p></div>'; return;
+  }
+  container.innerHTML = records.reverse().map(r => `
+    <div class="record-card">
+      <div class="record-header">
+        <div class="record-name">${r['ชื่อ-สกุล'] || '-'}</div>
+        <div class="record-date">${r['วันที่'] || ''}</div>
+      </div>
+      <div class="record-meta">
+        <span class="tag tag-class">ชั้น ${r['ชั้น'] || '-'} | ${r['เลขประจำตัว'] || '-'}</span>
+        <span class="tag tag-type">${r['ประเภทความผิด'] || '-'}</span>
+        <span class="tag tag-result">${r['ผลการตัดสิน'] || '-'}</span>
+      </div>
+      ${r['เหตุการณ์'] ? `<div class="record-note">📝 ${r['เหตุการณ์']}</div>` : ''}
+      ${r['อื่นๆ'] ? `<div class="record-note" style="color:#888">💬 ${r['อื่นๆ']}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+// ===== TOAST =====
+let toastTimer;
+function showToast(msg, isError=false) {
+  const t = document.getElementById('toast');
+  t.className = 'toast' + (isError ? ' error' : '');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ===== ENTER KEY =====
+document.addEventListener('keydown', e => { if (e.key==='Enter' && e.target.tagName!=='TEXTAREA') submitRecord(); });
+
+init();
+</script>
+</body>
+</html>
