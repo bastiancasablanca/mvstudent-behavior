@@ -474,12 +474,13 @@
           <label class="required">ผลการตัดสิน</label>
           <select id="verdict">
             <option value="">— เลือกผลการตัดสิน —</option>
+            <option value="ตักเตือน">🔔 ตักเตือน</option>
             <option value="หัก 5 คะแนน">📉 หัก 5 คะแนน</option>
             <option value="หัก 10 คะแนน">📉 หัก 10 คะแนน</option>
             <option value="หัก 15 คะแนน">📉 หัก 15 คะแนน</option>
             <option value="หัก 20 คะแนน">📉 หัก 20 คะแนน</option>
             <option value="ทัณฑ์บน">📜 ทัณฑ์บน</option>
-            <option value="เขียนหนังสือขอความอนุเคราะห์">✍️ เขียนหนังสือขอความอนุเคราะห์</option>
+            <option value="เขียนหนังสือขอความอนุเคราะห์ (บันทึกข้อความ)">✍️ เขียนหนังสือขอความอนุเคราะห์ (บันทึกข้อความ)</option>
           </select>
         </div>
         <div class="form-group full">
@@ -574,12 +575,13 @@
       <div class="form-group full">
         <label>ผลการตัดสิน</label>
         <select id="e_verdict">
+          <option value="ตักเตือน">🔔 ตักเตือน</option>
           <option value="หัก 5 คะแนน">📉 หัก 5 คะแนน</option>
           <option value="หัก 10 คะแนน">📉 หัก 10 คะแนน</option>
           <option value="หัก 15 คะแนน">📉 หัก 15 คะแนน</option>
           <option value="หัก 20 คะแนน">📉 หัก 20 คะแนน</option>
           <option value="ทัณฑ์บน">📜 ทัณฑ์บน</option>
-          <option value="เขียนหนังสือขอความอนุเคราะห์">✍️ เขียนหนังสือขอความอนุเคราะห์</option>
+          <option value="เขียนหนังสือขอความอนุเคราะห์ (บันทึกข้อความ)">✍️ เขียนหนังสือขอความอนุเคราะห์ (บันทึกข้อความ)</option>
         </select>
       </div>
       <div class="form-group full"><label>เหตุการณ์</label><textarea id="e_reason" style="min-height:60px"></textarea></div>
@@ -782,10 +784,6 @@ function renderRecords(records) {
       </div>
       ${r['เหตุการณ์'] ? `<div class="record-note">📝 ${r['เหตุการณ์']}</div>` : ''}
       ${r['อื่นๆ'] ? `<div class="record-note" style="color:#888">💬 ${r['อื่นๆ']}</div>` : ''}
-      <div style="display:flex;gap:8px;margin-top:12px">
-        <button onclick="openEdit(${records.length - 1 - i})" style="flex:1;padding:8px;border:1.5px solid var(--green-light);border-radius:8px;background:#fff;color:var(--green-deep);font-family:'Sarabun',sans-serif;font-size:13px;font-weight:600;cursor:pointer">✏️ แก้ไข</button>
-        <button onclick="openDelete(${records.length - 1 - i})" style="flex:1;padding:8px;border:1.5px solid #ef9a9a;border-radius:8px;background:#fff;color:#c62828;font-family:'Sarabun',sans-serif;font-size:13px;font-weight:600;cursor:pointer">🗑️ ลบ</button>
-      </div>
     </div>
   `).join('');
 }
