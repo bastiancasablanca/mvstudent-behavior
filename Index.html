@@ -172,7 +172,7 @@
         </div>
         <div class="form-group full">
           <label class="required">ชื่อ – สกุลนักเรียน</label>
-          <input type="text" id="name" placeholder="ชื่อ - นามสกุล">
+          <input type="text" id="name" placeholder="ชื่อ นามสกุล">
         </div>
       </div>
     </div>
@@ -494,6 +494,23 @@ function debounceSearch() {
   searchTimer = setTimeout(doSearch, 480);
 }
 
+function formatDate(val) {
+  if (!val) return '';
+  var s = String(val);
+  // ISO format: 2026-06-12T... or 2026-06-12
+  if (s.match(/^\d{4}-\d{2}-\d{2}/)) {
+    var parts = s.substring(0, 10).split('-');
+    return parts[2] + '/' + parts[1] + '/' + parts[0];
+  }
+  // Serial number (Excel/Sheets date)
+  if (s.match(/^\d{5}$/)) {
+    var d = new Date(Math.round((parseFloat(s) - 25569) * 86400 * 1000));
+    return ('0'+d.getUTCDate()).slice(-2) + '/' + ('0'+(d.getUTCMonth()+1)).slice(-2) + '/' + d.getUTCFullYear();
+  }
+  // Already formatted dd/mm/yyyy
+  return s;
+}
+
 function renderRecords(records, filters) {
   const container = document.getElementById('recordsList');
   const summary   = document.getElementById('resultSummary');
@@ -514,7 +531,7 @@ function renderRecords(records, filters) {
   }
 
   container.innerHTML = [...records].reverse().map(function(r, idx) {
-    const date    = r['วัน/เดือน/ปี'] || r['วันที่'] || '';
+    const date    = formatDate(r['วัน/เดือน/ปี'] || r['วันที่'] || '');
     const name    = r['ชื่อ-สกุล'] || '-';
     const cls     = r['ชั้น'] || '-';
     const sid     = r['เลขประจำตัว'] || '-';
