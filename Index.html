@@ -488,6 +488,8 @@ function fetchData(url) {
     document.body.appendChild(script);
   });
 }
+
+function debounceSearch() {
   clearTimeout(searchTimer);
   searchTimer = setTimeout(doSearch, 480);
 }
