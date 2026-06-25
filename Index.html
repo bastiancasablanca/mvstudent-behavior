@@ -3,410 +3,135 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>บันทึกพฤติกรรมนักเรียน ปีการศึกษา 2569</title>
+<title>บันทึกพฤติกรรมนักเรียน — โรงเรียนมารีวิทย์บ่อวิน</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --green-deep: #1a3a2a;
-    --green-mid: #2d5a3d;
-    --green-light: #4a8c5c;
-    --green-pale: #c8e6c9;
-    --green-ghost: #f0f7f1;
-    --accent: #ff6b35;
-    --accent-soft: #fff0eb;
-    --text-dark: #111a14;
-    --text-mid: #3d5a47;
-    --text-light: #7a9e87;
-    --border: #c2d9c8;
-    --white: #ffffff;
-    --shadow: 0 4px 24px rgba(26,58,42,0.10);
-    --shadow-lg: 0 8px 40px rgba(26,58,42,0.16);
+    --primary-dark:   #1F402D;
+    --secondary-base: #467055;
+    --tertiary:       #2A5239;
+    --bg:             #F2F7F4;
+    --accent:         #F05A28;
+    --accent-soft:    #FEF0EB;
+    --text-primary:   #333333;
+    --text-light:     #FFFFFF;
+    --text-mid:       #4a6655;
+    --text-muted:     #7a9e87;
+    --border:         #C8DAD0;
+    --white:          #FFFFFF;
+    --green-pale:     #D6EAD9;
+    --shadow:         0 2px 16px rgba(31,64,45,0.10);
+    --shadow-lg:      0 8px 40px rgba(31,64,45,0.16);
+    --radius:         12px;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Sarabun', sans-serif; background: var(--bg); min-height: 100vh; color: var(--text-primary); }
 
-  body {
-    font-family: 'Sarabun', sans-serif;
-    background: var(--green-ghost);
-    min-height: 100vh;
-    color: var(--text-dark);
-  }
+  header { background: var(--primary-dark); position: relative; overflow: hidden; }
+  header::before { content:''; position:absolute; top:-50px; right:-50px; width:200px; height:200px; border-radius:50%; background:rgba(255,255,255,0.03); }
+  header::after  { content:''; position:absolute; bottom:-30px; left:60px; width:120px; height:120px; border-radius:50%; background:rgba(255,255,255,0.025); }
+  .header-inner { position:relative; z-index:1; max-width:720px; margin:0 auto; padding:22px 20px 18px; display:flex; align-items:center; gap:14px; }
+  .header-logo  { width:46px; height:46px; background:var(--secondary-base); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+  .header-text h1 { font-size:17px; font-weight:700; color:var(--text-light); line-height:1.3; }
+  .header-text p  { font-size:12px; color:var(--green-pale); margin-top:2px; font-family:'IBM Plex Mono',monospace; letter-spacing:0.4px; opacity:0.85; }
 
-  /* HEADER */
-  header {
-    background: var(--green-deep);
-    padding: 0;
-    position: relative;
-    overflow: hidden;
-  }
-  header::before {
-    content: '';
-    position: absolute;
-    top: -60px; right: -60px;
-    width: 220px; height: 220px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.04);
-  }
-  header::after {
-    content: '';
-    position: absolute;
-    bottom: -40px; left: 40px;
-    width: 140px; height: 140px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.03);
-  }
-  .header-inner {
-    position: relative;
-    z-index: 1;
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 28px 24px 24px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  .header-icon {
-    width: 48px; height: 48px;
-    background: var(--green-light);
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px;
-    flex-shrink: 0;
-  }
-  .header-text h1 {
-    font-size: 18px;
-    font-weight: 700;
-    color: #fff;
-    line-height: 1.3;
-  }
-  .header-text p {
-    font-size: 13px;
-    color: var(--green-pale);
-    margin-top: 2px;
-    font-family: 'IBM Plex Mono', monospace;
-    letter-spacing: 0.5px;
-  }
+  .tabs { max-width:720px; margin:0 auto; display:flex; background:var(--tertiary); }
+  .tab-btn { flex:1; padding:11px 0; background:transparent; border:none; color:var(--green-pale); font-family:'Sarabun',sans-serif; font-size:13.5px; font-weight:600; cursor:pointer; transition:all 0.2s; position:relative; opacity:0.8; }
+  .tab-btn.active { color:var(--text-light); background:rgba(255,255,255,0.07); opacity:1; }
+  .tab-btn.active::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2.5px; background:var(--accent); border-radius:2px 2px 0 0; }
+  .tab-btn:hover:not(.active) { opacity:1; background:rgba(255,255,255,0.04); }
 
-  /* TABS */
-  .tabs {
-    max-width: 700px;
-    margin: 0 auto;
-    display: flex;
-    gap: 0;
-    background: var(--green-mid);
-    border-bottom: 2px solid var(--green-light);
-  }
-  .tab-btn {
-    flex: 1;
-    padding: 12px 0;
-    background: transparent;
-    border: none;
-    color: var(--green-pale);
-    font-family: 'Sarabun', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    letter-spacing: 0.3px;
-    transition: all 0.2s;
-    position: relative;
-  }
-  .tab-btn.active {
-    color: #fff;
-    background: rgba(255,255,255,0.08);
-  }
-  .tab-btn.active::after {
-    content: '';
-    position: absolute;
-    bottom: -2px; left: 0; right: 0;
-    height: 2px;
-    background: var(--accent);
-  }
+  .content { max-width:720px; margin:0 auto; padding:20px 16px 52px; }
 
-  /* MAIN CONTENT */
-  .content {
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 24px 16px 48px;
-  }
+  .card { background:var(--white); border-radius:var(--radius); padding:22px; box-shadow:var(--shadow); margin-bottom:14px; border:1px solid rgba(31,64,45,0.06); }
+  .card-title { font-size:14.5px; font-weight:700; color:var(--primary-dark); margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+  .card-title::before { content:''; display:inline-block; width:3.5px; height:17px; background:var(--accent); border-radius:2px; flex-shrink:0; }
 
-  /* SETUP BANNER */
-  .setup-banner {
-    background: linear-gradient(135deg, #fff8e1, #fff3cd);
-    border: 1.5px solid #ffc107;
-    border-radius: 12px;
-    padding: 16px 18px;
-    margin-bottom: 22px;
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-  }
-  .setup-banner .icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
-  .setup-banner .text { font-size: 13px; line-height: 1.7; color: #5d4037; }
-  .setup-banner .text strong { display: block; font-size: 14px; color: #3e2723; margin-bottom: 4px; }
-  .setup-banner .text code {
-    background: rgba(0,0,0,0.08);
-    padding: 1px 6px;
-    border-radius: 4px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    word-break: break-all;
-  }
+  .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:13px; }
+  .form-group { display:flex; flex-direction:column; gap:5px; }
+  .form-group.full { grid-column:1/-1; }
+  label { font-size:12.5px; font-weight:600; color:var(--text-mid); letter-spacing:0.2px; }
+  .required::after { content:' *'; color:var(--accent); }
 
-  /* SCRIPT URL INPUT */
-  .url-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 22px;
-    align-items: center;
-  }
-  .url-row input {
-    flex: 1;
-    padding: 10px 14px;
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    background: #fff;
-    color: var(--text-dark);
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .url-row input:focus { border-color: var(--green-light); }
-  .url-row input::placeholder { color: var(--text-light); }
-  .url-save-btn {
-    padding: 10px 16px;
-    background: var(--green-mid);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    font-family: 'Sarabun', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: background 0.2s;
-  }
-  .url-save-btn:hover { background: var(--green-light); }
-
-  /* CARD */
-  .card {
-    background: var(--white);
-    border-radius: 16px;
-    padding: 24px;
-    box-shadow: var(--shadow);
-    margin-bottom: 16px;
-  }
-  .card-title {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--green-deep);
-    margin-bottom: 18px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .card-title::before {
-    content: '';
-    display: inline-block;
-    width: 4px; height: 18px;
-    background: var(--accent);
-    border-radius: 2px;
-  }
-
-  /* FORM */
-  .form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-  }
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-  .form-group.full { grid-column: 1 / -1; }
-  label {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-mid);
-  }
-  .required::after { content: ' *'; color: var(--accent); }
   input[type="text"], input[type="date"], select, textarea {
-    padding: 10px 14px;
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    font-family: 'Sarabun', sans-serif;
-    font-size: 14px;
-    color: var(--text-dark);
-    background: #fff;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    width: 100%;
-    -webkit-appearance: none;
+    padding:9px 13px; border:1.5px solid var(--border); border-radius:9px;
+    font-family:'Sarabun',sans-serif; font-size:14px; color:var(--text-primary);
+    background:#fff; outline:none; transition:border-color 0.18s, box-shadow 0.18s; width:100%; -webkit-appearance:none;
   }
-  input:focus, select:focus, textarea:focus {
-    border-color: var(--green-light);
-    box-shadow: 0 0 0 3px rgba(74,140,92,0.12);
-  }
-  select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234a8c5c' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    padding-right: 34px;
-    cursor: pointer;
-  }
-  textarea { resize: vertical; min-height: 80px; }
+  input:focus, select:focus, textarea:focus { border-color:var(--secondary-base); box-shadow:0 0 0 3px rgba(70,112,85,0.13); }
+  select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%23467055' stroke-width='1.7' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; padding-right:32px; cursor:pointer; }
+  textarea { resize:vertical; min-height:76px; }
 
-  /* SUBMIT BUTTON */
-  .submit-btn {
-    width: 100%;
-    padding: 14px;
-    background: var(--green-deep);
-    color: #fff;
-    border: none;
-    border-radius: 12px;
-    font-family: 'Sarabun', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    margin-top: 20px;
-    letter-spacing: 0.4px;
-    position: relative;
-    overflow: hidden;
-    transition: background 0.2s, transform 0.1s;
-  }
-  .submit-btn:hover { background: var(--green-mid); }
-  .submit-btn:active { transform: scale(0.99); }
-  .submit-btn:disabled { background: var(--text-light); cursor: not-allowed; }
-  .submit-btn .spinner {
-    display: none;
-    width: 18px; height: 18px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    margin: 0 auto;
-  }
-  .submit-btn.loading .btn-text { display: none; }
-  .submit-btn.loading .spinner { display: block; }
+  .submit-btn { width:100%; padding:13px; background:var(--primary-dark); color:var(--text-light); border:none; border-radius:10px; font-family:'Sarabun',sans-serif; font-size:15px; font-weight:700; cursor:pointer; margin-top:18px; letter-spacing:0.3px; transition:background 0.2s, transform 0.1s; }
+  .submit-btn:hover { background:var(--tertiary); }
+  .submit-btn:active { transform:scale(0.99); }
+  .submit-btn:disabled { background:var(--text-muted); cursor:not-allowed; }
+  .submit-btn .spinner { display:none; width:17px; height:17px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite; margin:0 auto; }
+  .submit-btn.loading .btn-text { display:none; }
+  .submit-btn.loading .spinner { display:block; }
+  @keyframes spin { to { transform:rotate(360deg); } }
 
-  @keyframes spin { to { transform: rotate(360deg); } }
+  .filter-panel { background:var(--white); border-radius:var(--radius); padding:20px 22px; box-shadow:var(--shadow); margin-bottom:14px; border:1px solid rgba(31,64,45,0.06); }
+  .filter-title { font-size:14.5px; font-weight:700; color:var(--primary-dark); margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+  .filter-title::before { content:''; display:inline-block; width:3.5px; height:17px; background:var(--accent); border-radius:2px; flex-shrink:0; }
+  .filter-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:14px; }
+  .filter-group { display:flex; flex-direction:column; gap:5px; }
+  .filter-group label { font-size:12px; font-weight:600; color:var(--text-mid); text-transform:uppercase; letter-spacing:0.5px; }
+  .filter-actions { display:flex; gap:10px; align-items:center; }
 
-  /* TOAST */
-  .toast {
-    position: fixed;
-    bottom: 24px; left: 50%;
-    transform: translateX(-50%) translateY(80px);
-    background: var(--green-deep);
-    color: #fff;
-    padding: 12px 24px;
-    border-radius: 50px;
-    font-size: 14px;
-    font-weight: 600;
-    box-shadow: var(--shadow-lg);
-    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
-    z-index: 999;
-    white-space: nowrap;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .toast.show { transform: translateX(-50%) translateY(0); }
-  .toast.error { background: #c62828; }
+  .btn-search { flex:1; padding:11px 18px; background:var(--secondary-base); color:var(--text-light); border:none; border-radius:9px; font-family:'Sarabun',sans-serif; font-size:14px; font-weight:700; cursor:pointer; transition:background 0.2s; }
+  .btn-search:hover { background:var(--tertiary); }
+  .btn-reset { padding:11px 16px; background:transparent; color:var(--text-mid); border:1.5px solid var(--border); border-radius:9px; font-family:'Sarabun',sans-serif; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s; white-space:nowrap; }
+  .btn-reset:hover { border-color:var(--secondary-base); color:var(--secondary-base); }
 
-  /* RECORDS TAB */
-  .search-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-  .search-row input {
-    flex: 1;
-    padding: 10px 14px;
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    font-family: 'Sarabun', sans-serif;
-    font-size: 14px;
-    outline: none;
-  }
-  .search-row input:focus { border-color: var(--green-light); }
-  .load-btn {
-    padding: 10px 18px;
-    background: var(--green-light);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    font-family: 'Sarabun', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: background 0.2s;
-  }
-  .load-btn:hover { background: var(--green-mid); }
+  .search-row { display:flex; gap:8px; margin-bottom:14px; }
+  .search-row input { flex:1; }
+  .btn-refresh { padding:9px 14px; background:var(--bg); color:var(--text-mid); border:1.5px solid var(--border); border-radius:9px; font-size:14px; cursor:pointer; transition:all 0.2s; }
+  .btn-refresh:hover { border-color:var(--secondary-base); color:var(--secondary-base); }
 
-  .records-list { display: flex; flex-direction: column; gap: 10px; }
+  .result-summary { display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:var(--bg); border-radius:8px; margin-bottom:12px; font-size:13px; color:var(--text-mid); border:1px solid var(--border); flex-wrap:wrap; gap:6px; }
+  .result-summary strong { color:var(--primary-dark); }
+  .filter-tags { display:flex; gap:6px; flex-wrap:wrap; }
+  .filter-tag { padding:3px 9px; background:var(--green-pale); color:var(--primary-dark); border-radius:20px; font-size:11.5px; font-weight:600; }
 
-  .record-card {
-    background: #fff;
-    border: 1.5px solid var(--border);
-    border-radius: 12px;
-    padding: 14px 16px;
-    transition: border-color 0.2s;
-  }
-  .record-card:hover { border-color: var(--green-light); }
-  .record-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 8px;
-  }
-  .record-name { font-weight: 700; font-size: 15px; color: var(--green-deep); }
-  .record-date { font-size: 12px; color: var(--text-light); font-family: 'IBM Plex Mono', monospace; }
-  .record-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
-  .tag {
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-  }
-  .tag-type { background: var(--green-pale); color: var(--green-deep); }
-  .tag-result { background: var(--accent-soft); color: var(--accent); }
-  .tag-class { background: #e3f2fd; color: #1565c0; }
-  .record-note { font-size: 13px; color: var(--text-mid); margin-top: 4px; }
+  .records-list { display:flex; flex-direction:column; gap:9px; }
+  .record-card { background:var(--white); border:1.5px solid var(--border); border-radius:11px; padding:13px 15px; transition:border-color 0.18s, box-shadow 0.18s; }
+  .record-card:hover { border-color:var(--secondary-base); box-shadow:0 2px 10px rgba(70,112,85,0.10); }
+  .record-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:7px; }
+  .record-name { font-weight:700; font-size:14.5px; color:var(--primary-dark); }
+  .record-date { font-size:11.5px; color:var(--text-muted); font-family:'IBM Plex Mono',monospace; white-space:nowrap; }
+  .record-meta { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:5px; }
+  .tag { padding:2.5px 9px; border-radius:20px; font-size:11.5px; font-weight:600; white-space:nowrap; }
+  .tag-class  { background:#E3F2FD; color:#1565C0; }
+  .tag-level  { background:var(--green-pale); color:var(--primary-dark); }
+  .tag-type   { background:#F3E5F5; color:#6A1B9A; }
+  .tag-result { background:var(--accent-soft); color:var(--accent); }
+  .tag-term   { background:#FFF8E1; color:#F57F17; }
+  .record-note { font-size:12.5px; color:var(--text-mid); margin-top:4px; line-height:1.5; }
 
-  .empty-state {
-    text-align: center;
-    padding: 48px 16px;
-    color: var(--text-light);
-  }
-  .empty-state .emoji { font-size: 40px; margin-bottom: 12px; }
-  .empty-state p { font-size: 14px; }
+  .placeholder-state { text-align:center; padding:52px 16px; color:var(--text-muted); }
+  .placeholder-state .emoji { font-size:42px; margin-bottom:12px; }
+  .placeholder-state .title { font-size:16px; font-weight:700; color:var(--primary-dark); margin-bottom:6px; }
+  .placeholder-state p { font-size:13.5px; line-height:1.7; }
+  .empty-state { text-align:center; padding:40px 16px; color:var(--text-muted); }
+  .empty-state .emoji { font-size:36px; margin-bottom:10px; }
+  .empty-state p { font-size:13.5px; }
 
-  /* STATUS BAR */
-  .status-bar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 14px;
-    border-radius: 8px;
-    margin-bottom: 16px;
-    font-size: 13px;
-    font-weight: 500;
-  }
-  .status-bar.connected { background: #e8f5e9; color: #2e7d32; }
-  .status-bar.disconnected { background: #fce4ec; color: #c62828; }
-  .status-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .connected .status-dot { background: #4caf50; }
-  .disconnected .status-dot { background: #ef5350; }
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:900; overflow-y:auto; padding:16px; }
+  .modal-box { background:#fff; border-radius:14px; max-width:500px; margin:0 auto; padding:22px; position:relative; }
+  .modal-header { font-size:15px; font-weight:700; color:var(--primary-dark); margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; }
+  .modal-close { background:none; border:none; font-size:20px; cursor:pointer; color:#aaa; line-height:1; }
+  .modal-close:hover { color:#555; }
 
-  @media (max-width: 480px) {
-    .form-grid { grid-template-columns: 1fr; }
-    .form-group.full { grid-column: 1; }
-    .header-inner { padding: 20px 16px 18px; }
+  .toast { position:fixed; bottom:22px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--primary-dark); color:#fff; padding:11px 22px; border-radius:50px; font-size:13.5px; font-weight:600; box-shadow:var(--shadow-lg); transition:transform 0.32s cubic-bezier(0.34,1.56,0.64,1); z-index:999; white-space:nowrap; display:flex; align-items:center; gap:8px; }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+  .toast.error { background:#c62828; }
+
+  @media (max-width:520px) {
+    .form-grid { grid-template-columns:1fr; }
+    .form-group.full { grid-column:1; }
+    .filter-grid { grid-template-columns:1fr 1fr; }
   }
 </style>
 </head>
@@ -414,24 +139,22 @@
 
 <header>
   <div class="header-inner">
-    <div class="header-icon">📋</div>
+    <div class="header-logo">📋</div>
     <div class="header-text">
       <h1>บันทึกพฤติกรรมนักเรียน</h1>
-      <p>ปีการศึกษา 2569</p>
+      <p id="headerSub">โรงเรียนมารีวิทย์บ่อวิน</p>
     </div>
   </div>
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab('form')">📝 บันทึกข้อมูล</button>
     <button class="tab-btn" onclick="switchTab('records')">📂 ดูบันทึกทั้งหมด</button>
-    <button class="tab-btn" id="setupTabBtn" onclick="switchTab('setup')" style="display:none">⚙️ ตั้งค่า</button>
   </div>
 </header>
 
 <div class="content">
 
-  <!-- ===== FORM TAB ===== -->
+  <!-- FORM TAB -->
   <div id="tab-form">
-
     <div class="card">
       <div class="card-title">ข้อมูลนักเรียน</div>
       <div class="form-grid">
@@ -441,7 +164,7 @@
         </div>
         <div class="form-group">
           <label class="required">ชั้น</label>
-          <input type="text" id="class" placeholder="เช่น ม.3/2">
+          <input type="text" id="class" placeholder="เช่น ม.3/2 หรือ ป.4/5">
         </div>
         <div class="form-group full">
           <label class="required">เลขประจำตัวนักเรียน</label>
@@ -492,7 +215,6 @@
           <input type="text" id="other" placeholder="หมายเหตุเพิ่มเติม">
         </div>
       </div>
-
       <button class="submit-btn" id="submitBtn" onclick="submitRecord()">
         <span class="btn-text">💾 บันทึกข้อมูล</span>
         <div class="spinner"></div>
@@ -500,64 +222,71 @@
     </div>
   </div>
 
-  <!-- ===== RECORDS TAB ===== -->
+  <!-- RECORDS TAB -->
   <div id="tab-records" style="display:none">
-    <div class="card">
-      <div class="card-title">ค้นหาบันทึก</div>
-      <div class="search-row">
-        <input type="text" id="searchInput" placeholder="ค้นหาชื่อ, เลขประจำตัว, ชั้น..." oninput="debounceSearch()">
-        <button class="load-btn" onclick="loadRecords()">🔄 รีเฟรช</button>
-      </div>
-      <div id="recordsList" class="records-list">
-        <div class="empty-state"><div class="emoji">⏳</div><p>กำลังโหลด...</p></div>
-      </div>
-    </div>
-  </div>
 
-  <!-- ===== SETUP TAB ===== -->
-  <div id="tab-setup" style="display:none">
-    <div class="card">
-      <div class="card-title">ตั้งค่า Google Apps Script URL</div>
-      <div class="setup-banner">
-        <div class="icon">📖</div>
-        <div class="text">
-          <strong>วิธีตั้งค่า (ทำครั้งเดียว)</strong>
-          1. เปิด Google Sheets แล้วไปที่ <strong>ส่วนขยาย → Apps Script</strong><br>
-          2. วางโค้ด Apps Script ที่ด้านล่างนี้ลงไป<br>
-          3. กด <strong>Deploy → New deployment → Web app</strong><br>
-          4. ตั้ง "Who has access" เป็น <strong>Anyone</strong><br>
-          5. คัดลอก URL ที่ได้มาวางในช่องด้านล่าง
+    <div class="filter-panel">
+      <div class="filter-title">กรองข้อมูล</div>
+      <div class="filter-grid">
+        <div class="filter-group">
+          <label>ปีการศึกษา</label>
+          <select id="f_year"><option value="">ทั้งหมด</option></select>
+        </div>
+        <div class="filter-group">
+          <label>ระดับชั้น</label>
+          <select id="f_level">
+            <option value="">ทั้งหมด</option>
+            <option value="ประถม">ประถมศึกษา</option>
+            <option value="มัธยมต้น">มัธยมศึกษาตอนต้น</option>
+            <option value="มัธยมปลาย">มัธยมศึกษาตอนปลาย</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>ภาคเรียน</label>
+          <select id="f_term">
+            <option value="">ทั้งหมด</option>
+            <option value="1">ภาคเรียนที่ 1</option>
+            <option value="2">ภาคเรียนที่ 2</option>
+          </select>
         </div>
       </div>
-
-      <div class="form-group" style="margin-bottom:14px">
-        <label>Google Apps Script URL</label>
-        <div class="url-row">
-          <input type="text" id="scriptUrl" placeholder="https://script.google.com/macros/s/.../exec">
-          <button class="url-save-btn" onclick="saveUrl()">บันทึก</button>
-        </div>
-      </div>
-
-      <div style="background:#f5f5f5;border-radius:12px;padding:16px;margin-top:8px">
-        <div style="font-size:13px;font-weight:700;color:#333;margin-bottom:10px;font-family:'IBM Plex Mono',monospace;">📜 Apps Script Code — คัดลอกทั้งหมดนี้</div>
-        <pre id="scriptCode" style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#1a3a2a;white-space:pre-wrap;line-height:1.6;overflow-x:auto;background:transparent"></pre>
-        <button onclick="copyScript()" style="margin-top:10px;padding:8px 16px;background:var(--green-deep);color:#fff;border:none;border-radius:8px;font-family:'Sarabun',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">📋 คัดลอกโค้ด</button>
+      <div class="filter-actions">
+        <button class="btn-search" onclick="doSearch()">🔍 ค้นหา</button>
+        <button class="btn-reset" onclick="resetFilters()">รีเซ็ต</button>
       </div>
     </div>
+
+    <div id="resultsArea" style="display:none">
+      <div class="card" style="padding:16px 18px">
+        <div class="search-row">
+          <input type="text" id="searchInput" placeholder="ค้นหาชื่อ, เลขประจำตัว, ชั้น..." oninput="debounceSearch()">
+          <button class="btn-refresh" onclick="doSearch()">🔄</button>
+        </div>
+        <div id="resultSummary" class="result-summary" style="display:none"></div>
+        <div id="recordsList" class="records-list"></div>
+      </div>
+    </div>
+
+    <div id="recordsPlaceholder" class="placeholder-state">
+      <div class="emoji">🔎</div>
+      <div class="title">เลือกเงื่อนไขและกดค้นหา</div>
+      <p>ระบุปีการศึกษาและระดับชั้นที่ต้องการ<br>แล้วกด "ค้นหา" เพื่อแสดงบันทึก</p>
+    </div>
+
   </div>
 
 </div>
 
 <!-- EDIT MODAL -->
-<div id="editModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:900;overflow-y:auto;padding:16px">
-  <div style="background:#fff;border-radius:16px;max-width:500px;margin:0 auto;padding:24px;position:relative">
-    <div style="font-size:16px;font-weight:700;color:var(--green-deep);margin-bottom:18px;display:flex;justify-content:space-between;align-items:center">
+<div id="editModal" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
       ✏️ แก้ไขบันทึก
-      <button onclick="closeModal()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#999">✕</button>
+      <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="form-grid" style="gap:12px">
       <div class="form-group"><label>วันที่</label><input type="date" id="e_date"></div>
-      <div class="form-group"><label>ชั้น</label><input type="text" id="e_class" placeholder="ม.3/2"></div>
+      <div class="form-group"><label>ชั้น</label><input type="text" id="e_class"></div>
       <div class="form-group full"><label>เลขประจำตัว</label><input type="text" id="e_studentId"></div>
       <div class="form-group full"><label>ชื่อ – สกุล</label><input type="text" id="e_name"></div>
       <div class="form-group full">
@@ -595,260 +324,270 @@
   </div>
 </div>
 
-<!-- DELETE CONFIRM MODAL -->
-<div id="deleteModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:900;display:none;align-items:center;justify-content:center;padding:16px">
-  <div style="background:#fff;border-radius:16px;max-width:360px;width:100%;padding:24px;text-align:center">
-    <div style="font-size:36px;margin-bottom:12px">🗑️</div>
-    <div style="font-size:16px;font-weight:700;color:#c62828;margin-bottom:8px">ยืนยันการลบ?</div>
-    <div id="deleteConfirmName" style="font-size:14px;color:#555;margin-bottom:20px"></div>
+<!-- DELETE MODAL -->
+<div id="deleteModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:900;align-items:center;justify-content:center;padding:16px">
+  <div style="background:#fff;border-radius:14px;max-width:340px;width:100%;padding:24px;text-align:center">
+    <div style="font-size:34px;margin-bottom:10px">🗑️</div>
+    <div style="font-size:15px;font-weight:700;color:#c62828;margin-bottom:7px">ยืนยันการลบ?</div>
+    <div id="deleteConfirmName" style="font-size:13.5px;color:#666;margin-bottom:20px"></div>
     <div style="display:flex;gap:10px">
-      <button onclick="closeDeleteModal()" style="flex:1;padding:12px;border:1.5px solid var(--border);border-radius:10px;background:#fff;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;color:var(--text-mid)">ยกเลิก</button>
-      <button id="confirmDeleteBtn" onclick="confirmDelete()" style="flex:1;padding:12px;border:none;border-radius:10px;background:#c62828;color:#fff;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer">ลบเลย</button>
+      <button onclick="closeDeleteModal()" style="flex:1;padding:11px;border:1.5px solid var(--border);border-radius:9px;background:#fff;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;color:var(--text-mid)">ยกเลิก</button>
+      <button id="confirmDeleteBtn" onclick="confirmDelete()" style="flex:1;padding:11px;border:none;border-radius:9px;background:#c62828;color:#fff;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer">ลบเลย</button>
     </div>
   </div>
 </div>
 
-<div class="toast" id="toast">
-  <span id="toastIcon">✅</span>
-  <span id="toastMsg">บันทึกสำเร็จ</span>
-</div>
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
 
 <script>
-// ===== APPS SCRIPT CODE =====
-const APPS_SCRIPT_CODE = `function doPost(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("บันทึก") || SpreadsheetApp.getActiveSpreadsheet().insertSheet("บันทึก");
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(["วันที่","เลขประจำตัว","ชื่อ-สกุล","ชั้น","ประเภทความผิด","ผลการตัดสิน","เหตุการณ์","อื่นๆ","Timestamp"]);
-    sheet.getRange(1,1,1,9).setFontWeight("bold").setBackground("#4a8c5c").setFontColor("#ffffff");
-  }
-  var data = JSON.parse(e.postData.contents);
-  if (data.action === "delete") {
-    sheet.deleteRow(data.rowIndex + 1);
-    return ContentService.createTextOutput(JSON.stringify({status:"ok"})).setMimeType(ContentService.MimeType.JSON);
-  }
-  if (data.action === "update") {
-    var row = data.rowIndex + 1;
-    sheet.getRange(row,1,1,9).setValues([[data.date,data.studentId,data.name,data.class,data.offenseType,data.verdict,data.reason,data.other,sheet.getRange(row,9).getValue()]]);
-    return ContentService.createTextOutput(JSON.stringify({status:"ok"})).setMimeType(ContentService.MimeType.JSON);
-  }
-  sheet.appendRow([data.date,data.studentId,data.name,data.class,data.offenseType,data.verdict,data.reason,data.other,new Date().toISOString()]);
-  return ContentService.createTextOutput(JSON.stringify({status:"ok"})).setMimeType(ContentService.MimeType.JSON);
-}
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzoi7TBdRgBSi33OYPrO3apCp4NBZuRSY30DSngl0MVCYXvqlydq5VyzUSEU0Mar1M/exec';
 
-function doGet(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("บันทึก");
-  if (!sheet) return ContentService.createTextOutput(JSON.stringify({records:[]})).setMimeType(ContentService.MimeType.JSON);
-  var data = sheet.getDataRange().getValues();
-  var headers = data[0];
-  var records = [];
-  for (var i = 1; i < data.length; i++) {
-    var row = {};
-    headers.forEach(function(h, j) { row[h] = data[i][j]; });
-    row._rowIndex = i + 1;
-    records.push(row);
-  }
-  var query = (e.parameter.q || "").toLowerCase();
-  if (query) {
-    records = records.filter(function(r) {
-      return Object.values(r).some(function(v){ return String(v).toLowerCase().includes(query); });
-    });
-  }
-  return ContentService.createTextOutput(JSON.stringify({records:records})).setMimeType(ContentService.MimeType.JSON);
-}`;
-
-document.getElementById('scriptCode').textContent = APPS_SCRIPT_CODE;
-
-// ===== STATE =====
-const scriptUrl = 'https://script.google.com/macros/s/AKfycbx7Sk0vB9fXz1BqblAqgcyVGxNj1-bFhquZAScp2yDkpkFEY0eTFWpj7cxx9i7GJubJ/exec';
 let allRecords = [];
 let pendingDeleteRow = null;
 let searchTimer = null;
 
+// ── ACADEMIC YEAR ──
+function getCurrentThaiAcademicYear() {
+  const now = new Date();
+  const adYear = now.getFullYear();
+  return ((now.getMonth() + 1) >= 5 ? adYear : adYear - 1) + 543;
+}
+function buildYearDropdown() {
+  const cur = getCurrentThaiAcademicYear();
+  const sel = document.getElementById('f_year');
+  sel.innerHTML = '<option value="">ทั้งหมด</option>';
+  for (let y = cur; y >= 2564; y--) {
+    const o = document.createElement('option');
+    o.value = y; o.textContent = y;
+    sel.appendChild(o);
+  }
+}
+
+// ── INIT ──
 function init() {
-  const today = new Date().toISOString().split('T')[0];
-  document.getElementById('date').value = today;
-  let clicks = 0;
-  document.querySelector('.header-icon').addEventListener('click', () => {
-    clicks++;
-    if (clicks >= 5) { document.getElementById('setupTabBtn').style.display = 'block'; }
-  });
+  const y = getCurrentThaiAcademicYear();
+  document.getElementById('headerSub').textContent = 'โรงเรียนมารีวิทย์บ่อวิน · ปีการศึกษา ' + y;
+  document.title = 'บันทึกพฤติกรรมนักเรียน ปีการศึกษา ' + y;
+  document.getElementById('date').value = new Date().toISOString().split('T')[0];
+  buildYearDropdown();
 }
 
-// ===== OFFENSE OTHER TOGGLE =====
-function toggleOffenseOther() {
-  const v = document.getElementById('offenseType').value;
-  document.getElementById('offenseOther').style.display = v === 'อื่นๆ' ? 'block' : 'none';
-}
-function toggleVerdictOther() {}  // kept for edit modal compatibility
-
-// ===== TABS =====
+// ── TABS ──
 function switchTab(tab) {
-  ['form','records','setup'].forEach(t => {
-    document.getElementById('tab-'+t).style.display = t===tab ? 'block' : 'none';
+  ['form','records'].forEach(t => {
+    document.getElementById('tab-'+t).style.display = (t===tab) ? 'block' : 'none';
   });
   document.querySelectorAll('.tab-btn').forEach((btn, i) => {
-    btn.classList.toggle('active', ['form','records','setup'][i]===tab);
+    btn.classList.toggle('active', ['form','records'][i] === tab);
   });
-  if (tab === 'records') loadRecords();
+  if (tab === 'records') {
+    document.getElementById('resultsArea').style.display = 'none';
+    document.getElementById('recordsPlaceholder').style.display = 'block';
+  }
 }
 
-// ===== SETUP =====
-function saveUrl() {
-  showToast('✅ URL ฝังในโค้ดเรียบร้อย');
+// ── OFFENSE OTHER ──
+function toggleOffenseOther() {
+  document.getElementById('offenseOther').style.display =
+    document.getElementById('offenseType').value === 'อื่นๆ' ? 'block' : 'none';
 }
-function copyScript() {
-  navigator.clipboard.writeText(APPS_SCRIPT_CODE).then(() => showToast('📋 คัดลอกโค้ดสำเร็จ'));
+function toggleEditOffenseOther() {
+  document.getElementById('e_offenseOther').style.display =
+    document.getElementById('e_offenseType').value === 'อื่นๆ' ? 'block' : 'none';
 }
 
-// ===== SUBMIT =====
+// ── SUBMIT ──
 async function submitRecord() {
   const offenseVal = document.getElementById('offenseType').value;
-  const offenseFinal = offenseVal === 'อื่นๆ'
-    ? (document.getElementById('offenseOther').value.trim() || 'อื่นๆ')
-    : offenseVal;
-
   const data = {
-    date: document.getElementById('date').value,
-    studentId: document.getElementById('studentId').value.trim(),
-    name: document.getElementById('name').value.trim(),
-    class: document.getElementById('class').value.trim(),
-    offenseType: offenseFinal,
-    verdict: document.getElementById('verdict').value,
-    reason: document.getElementById('reason').value.trim(),
-    other: document.getElementById('other').value.trim()
+    date:        document.getElementById('date').value,
+    studentId:   document.getElementById('studentId').value.trim(),
+    name:        document.getElementById('name').value.trim(),
+    class:       document.getElementById('class').value.trim(),
+    offenseType: offenseVal === 'อื่นๆ' ? (document.getElementById('offenseOther').value.trim() || 'อื่นๆ') : offenseVal,
+    verdict:     document.getElementById('verdict').value,
+    reason:      document.getElementById('reason').value.trim(),
+    other:       document.getElementById('other').value.trim()
   };
-
   if (!data.date || !data.studentId || !data.name || !data.class || !data.offenseType || !data.verdict) {
     showToast('❌ กรุณากรอกข้อมูลที่จำเป็นให้ครบ', true); return;
   }
-
   const btn = document.getElementById('submitBtn');
   btn.classList.add('loading'); btn.disabled = true;
-
   try {
-    await fetch(scriptUrl, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } });
+    await fetch(SCRIPT_URL, { method:'POST', mode:'no-cors', body:JSON.stringify(data), headers:{'Content-Type':'application/json'} });
     showToast('✅ บันทึกข้อมูลสำเร็จ');
-    clearForm();
+    ['studentId','name','class','reason','other'].forEach(id => document.getElementById(id).value='');
+    document.getElementById('offenseType').value='';
+    document.getElementById('offenseOther').value='';
+    document.getElementById('offenseOther').style.display='none';
+    document.getElementById('verdict').value='';
+    document.getElementById('date').value = new Date().toISOString().split('T')[0];
   } catch(e) {
-    showToast('❌ ไม่สามารถเชื่อมต่อได้: ' + e.message, true);
+    showToast('❌ ไม่สามารถเชื่อมต่อได้', true);
   } finally {
     btn.classList.remove('loading'); btn.disabled = false;
   }
 }
 
-function clearForm() {
-  ['studentId','name','class','reason','other'].forEach(id => document.getElementById(id).value='');
-  document.getElementById('offenseType').value='';
-  document.getElementById('offenseOther').value='';
-  document.getElementById('offenseOther').style.display='none';
-  document.getElementById('verdict').value='';
-  const today = new Date().toISOString().split('T')[0];
-  document.getElementById('date').value = today;
+// ── SEARCH / FILTER ──
+function resetFilters() {
+  document.getElementById('f_year').value  = '';
+  document.getElementById('f_level').value = '';
+  document.getElementById('f_term').value  = '';
+  if (document.getElementById('searchInput'))
+    document.getElementById('searchInput').value = '';
+  document.getElementById('resultsArea').style.display = 'none';
+  document.getElementById('recordsPlaceholder').style.display = 'block';
+  allRecords = [];
 }
 
-// ===== LOAD RECORDS =====
-async function loadRecords() {
-  const q = document.getElementById('searchInput').value.trim();
-  const url = scriptUrl + (q ? '?q=' + encodeURIComponent(q) : '');
-  document.getElementById('recordsList').innerHTML = '<div class="empty-state"><div class="emoji">⏳</div><p>กำลังโหลด...</p></div>';
+async function doSearch() {
+  const year  = document.getElementById('f_year').value;
+  const level = document.getElementById('f_level').value;
+  const term  = document.getElementById('f_term').value;
+  const q     = (document.getElementById('searchInput')?.value || '').trim();
+
+  document.getElementById('recordsPlaceholder').style.display = 'none';
+  document.getElementById('resultsArea').style.display = 'block';
+  document.getElementById('resultSummary').style.display = 'none';
+  document.getElementById('recordsList').innerHTML =
+    '<div class="empty-state"><div class="emoji">⏳</div><p>กำลังโหลด...</p></div>';
+
+  let url = SCRIPT_URL + '?dummy=1';
+  if (year)  url += '&year='  + encodeURIComponent(year);
+  if (level) url += '&level=' + encodeURIComponent(level);
+  if (term)  url += '&term='  + encodeURIComponent(term);
+  if (q)     url += '&q='     + encodeURIComponent(q);
+
   try {
-    const res = await fetch(url);
-    const json = await res.json();
+    const json = await fetchData(url);
     allRecords = json.records || [];
-    renderRecords(allRecords);
+    renderRecords(allRecords, { year, level, term, q });
   } catch(e) {
-    document.getElementById('recordsList').innerHTML = '<div class="empty-state"><div class="emoji">❌</div><p>ไม่สามารถโหลดข้อมูลได้<br><small>' + e.message + '</small></p></div>';
+    document.getElementById('recordsList').innerHTML =
+      '<div class="empty-state"><div class="emoji">❌</div><p>โหลดข้อมูลไม่ได้<br><small>' + e.message + '</small></p></div>';
   }
 }
 
-function debounceSearch() {
+function fetchData(url) {
+  return new Promise(function(resolve, reject) {
+    const cb = 'cb_' + Date.now();
+    const script = document.createElement('script');
+    window[cb] = function(data) {
+      delete window[cb];
+      document.body.removeChild(script);
+      resolve(data);
+    };
+    script.onerror = function() {
+      delete window[cb];
+      document.body.removeChild(script);
+      reject(new Error('โหลดข้อมูลไม่ได้'));
+    };
+    script.src = url + '&callback=' + cb;
+    document.body.appendChild(script);
+  });
+}
   clearTimeout(searchTimer);
-  searchTimer = setTimeout(loadRecords, 500);
+  searchTimer = setTimeout(doSearch, 480);
 }
 
-function renderRecords(records) {
+function renderRecords(records, filters) {
   const container = document.getElementById('recordsList');
+  const summary   = document.getElementById('resultSummary');
+
+  const tags = [];
+  if (filters.year)  tags.push('<span class="filter-tag">ปี ' + filters.year + '</span>');
+  if (filters.level) tags.push('<span class="filter-tag">' + filters.level + '</span>');
+  if (filters.term)  tags.push('<span class="filter-tag">เทอม ' + filters.term + '</span>');
+  if (filters.q)     tags.push('<span class="filter-tag">🔍 "' + filters.q + '"</span>');
+
+  summary.style.display = 'flex';
+  summary.innerHTML = '<span>พบ <strong>' + records.length + '</strong> รายการ</span>' +
+    (tags.length ? '<div class="filter-tags">' + tags.join('') + '</div>' : '');
+
   if (!records.length) {
-    container.innerHTML = '<div class="empty-state"><div class="emoji">🔍</div><p>ไม่พบบันทึก</p></div>'; return;
+    container.innerHTML = '<div class="empty-state"><div class="emoji">🔍</div><p>ไม่พบบันทึกตามเงื่อนไขที่เลือก</p></div>';
+    return;
   }
-  container.innerHTML = [...records].reverse().map((r, i) => `
-    <div class="record-card">
-      <div class="record-header">
-        <div class="record-name">${r['ชื่อ-สกุล'] || '-'}</div>
-        <div class="record-date">${r['วันที่'] || ''}</div>
-      </div>
-      <div class="record-meta">
-        <span class="tag tag-class">ชั้น ${r['ชั้น'] || '-'} | ${r['เลขประจำตัว'] || '-'}</span>
-        <span class="tag tag-type">${r['ประเภทความผิด'] || '-'}</span>
-        <span class="tag tag-result">${r['ผลการตัดสิน'] || '-'}</span>
-      </div>
-      ${r['เหตุการณ์'] ? `<div class="record-note">📝 ${r['เหตุการณ์']}</div>` : ''}
-      ${r['อื่นๆ'] ? `<div class="record-note" style="color:#888">💬 ${r['อื่นๆ']}</div>` : ''}
-    </div>
-  `).join('');
+
+  container.innerHTML = [...records].reverse().map(function(r, idx) {
+    const date    = r['วัน/เดือน/ปี'] || r['วันที่'] || '';
+    const name    = r['ชื่อ-สกุล'] || '-';
+    const cls     = r['ชั้น'] || '-';
+    const sid     = r['เลขประจำตัว'] || '-';
+    const level   = r['ระดับชั้น'] || '';
+    const offense = r['ประเภทความผิด'] || '-';
+    const verdict = r['ผลการตัดสิน'] || '-';
+    const reason  = r['เหตุการณ์'] || '';
+    const other   = r['อื่นๆ'] || '';
+    const term    = r['เทอม'] ? 'เทอม ' + r['เทอม'] : '';
+    const year    = r['ปีการศึกษา'] ? 'ปี ' + r['ปีการศึกษา'] : '';
+    const realIdx = records.length - 1 - idx;
+    return '<div class="record-card">' +
+      '<div class="record-header">' +
+        '<div class="record-name">' + name + '</div>' +
+        '<div class="record-date">' + date + '</div>' +
+      '</div>' +
+      '<div class="record-meta">' +
+        '<span class="tag tag-class">' + cls + ' · ' + sid + '</span>' +
+        (level ? '<span class="tag tag-level">' + level + '</span>' : '') +
+        '<span class="tag tag-type">' + offense + '</span>' +
+        '<span class="tag tag-result">' + verdict + '</span>' +
+        ((term || year) ? '<span class="tag tag-term">' + term + (term && year ? ' · ' : '') + year + '</span>' : '') +
+      '</div>' +
+      (reason ? '<div class="record-note">📝 ' + reason + '</div>' : '') +
+      (other  ? '<div class="record-note" style="color:#999">💬 ' + other + '</div>' : '') +
+    '</div>';
+  }).join('');
 }
 
-function toggleEditOffenseOther() {
-  const v = document.getElementById('e_offenseType').value;
-  document.getElementById('e_offenseOther').style.display = v === 'อื่นๆ' ? 'block' : 'none';
-}
-
-// ===== EDIT =====
+// ── EDIT ──
 function openEdit(idx) {
   const r = allRecords[idx];
-  document.getElementById('e_date').value = r['วันที่'] || '';
-  document.getElementById('e_class').value = r['ชั้น'] || '';
+  document.getElementById('e_date').value      = r['วัน/เดือน/ปี'] || r['วันที่'] || '';
+  document.getElementById('e_class').value     = r['ชั้น'] || '';
   document.getElementById('e_studentId').value = r['เลขประจำตัว'] || '';
-  document.getElementById('e_name').value = r['ชื่อ-สกุล'] || '';
-  document.getElementById('e_reason').value = r['เหตุการณ์'] || '';
-  document.getElementById('e_other').value = r['อื่นๆ'] || '';
-  document.getElementById('e_rowIndex').value = r._rowIndex || (idx + 2);
-
-  const knownOffenses = ['โทรศัพท์','ชู้สาว','ทะเลาะวิวาท','ขโมยของ','ยาเสพติด'];
-  const offense = r['ประเภทความผิด'] || '';
-  if (knownOffenses.includes(offense)) {
-    document.getElementById('e_offenseType').value = offense;
+  document.getElementById('e_name').value      = r['ชื่อ-สกุล'] || '';
+  document.getElementById('e_reason').value    = r['เหตุการณ์'] || '';
+  document.getElementById('e_other').value     = r['อื่นๆ'] || '';
+  document.getElementById('e_rowIndex').value  = r._rowIndex || (idx + 2);
+  const known = ['โทรศัพท์','ชู้สาว','ทะเลาะวิวาท','ขโมยของ','ยาเสพติด'];
+  const off = r['ประเภทความผิด'] || '';
+  if (known.includes(off)) {
+    document.getElementById('e_offenseType').value = off;
     document.getElementById('e_offenseOther').style.display = 'none';
   } else {
     document.getElementById('e_offenseType').value = 'อื่นๆ';
-    document.getElementById('e_offenseOther').value = offense;
+    document.getElementById('e_offenseOther').value = off;
     document.getElementById('e_offenseOther').style.display = 'block';
   }
-
-  document.getElementById('e_verdict').value = r['ผลการตัดสิน'] || 'หัก 5 คะแนน';
+  document.getElementById('e_verdict').value = r['ผลการตัดสิน'] || 'ตักเตือน';
   document.getElementById('editModal').style.display = 'block';
 }
-
-function closeModal() {
-  document.getElementById('editModal').style.display = 'none';
-}
+function closeModal() { document.getElementById('editModal').style.display = 'none'; }
 
 async function saveEdit() {
   const offenseVal = document.getElementById('e_offenseType').value;
-  const offenseFinal = offenseVal === 'อื่นๆ'
-    ? (document.getElementById('e_offenseOther').value.trim() || 'อื่นๆ')
-    : offenseVal;
-
   const data = {
-    action: 'update',
-    rowIndex: parseInt(document.getElementById('e_rowIndex').value),
-    date: document.getElementById('e_date').value,
-    studentId: document.getElementById('e_studentId').value.trim(),
-    name: document.getElementById('e_name').value.trim(),
-    class: document.getElementById('e_class').value.trim(),
-    offenseType: offenseFinal,
-    verdict: document.getElementById('e_verdict').value,
-    reason: document.getElementById('e_reason').value.trim(),
-    other: document.getElementById('e_other').value.trim()
+    action:      'update',
+    rowIndex:    parseInt(document.getElementById('e_rowIndex').value),
+    date:        document.getElementById('e_date').value,
+    studentId:   document.getElementById('e_studentId').value.trim(),
+    name:        document.getElementById('e_name').value.trim(),
+    class:       document.getElementById('e_class').value.trim(),
+    offenseType: offenseVal === 'อื่นๆ' ? (document.getElementById('e_offenseOther').value.trim() || 'อื่นๆ') : offenseVal,
+    verdict:     document.getElementById('e_verdict').value,
+    reason:      document.getElementById('e_reason').value.trim(),
+    other:       document.getElementById('e_other').value.trim()
   };
-
   const btn = document.querySelector('#editModal .submit-btn');
   btn.classList.add('loading'); btn.disabled = true;
   try {
-    await fetch(scriptUrl, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } });
+    await fetch(SCRIPT_URL, { method:'POST', mode:'no-cors', body:JSON.stringify(data), headers:{'Content-Type':'application/json'} });
     showToast('✅ แก้ไขสำเร็จ');
     closeModal();
-    loadRecords();
+    doSearch();
   } catch(e) {
     showToast('❌ แก้ไขไม่สำเร็จ', true);
   } finally {
@@ -856,28 +595,27 @@ async function saveEdit() {
   }
 }
 
-// ===== DELETE =====
+// ── DELETE ──
 function openDelete(idx) {
   const r = allRecords[idx];
   pendingDeleteRow = r._rowIndex || (idx + 2);
-  document.getElementById('deleteConfirmName').textContent = `"${r['ชื่อ-สกุล'] || '-'}" วันที่ ${r['วันที่'] || '-'}`;
+  document.getElementById('deleteConfirmName').textContent =
+    '"' + (r['ชื่อ-สกุล'] || '-') + '" วันที่ ' + (r['วัน/เดือน/ปี'] || r['วันที่'] || '-');
   document.getElementById('deleteModal').style.display = 'flex';
 }
-
 function closeDeleteModal() {
   document.getElementById('deleteModal').style.display = 'none';
   pendingDeleteRow = null;
 }
-
 async function confirmDelete() {
   if (!pendingDeleteRow) return;
   const btn = document.getElementById('confirmDeleteBtn');
   btn.textContent = '⏳ กำลังลบ...'; btn.disabled = true;
   try {
-    await fetch(scriptUrl, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', rowIndex: pendingDeleteRow }), headers: { 'Content-Type': 'application/json' } });
+    await fetch(SCRIPT_URL, { method:'POST', mode:'no-cors', body:JSON.stringify({action:'delete', rowIndex:pendingDeleteRow}), headers:{'Content-Type':'application/json'} });
     showToast('🗑️ ลบสำเร็จ');
     closeDeleteModal();
-    loadRecords();
+    doSearch();
   } catch(e) {
     showToast('❌ ลบไม่สำเร็จ', true);
   } finally {
@@ -885,20 +623,21 @@ async function confirmDelete() {
   }
 }
 
-// ===== TOAST =====
+// ── TOAST ──
 let toastTimer;
-function showToast(msg, isError=false) {
+function showToast(msg, isError) {
   const t = document.getElementById('toast');
   t.className = 'toast' + (isError ? ' error' : '');
   document.getElementById('toastMsg').textContent = msg;
   t.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+  toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 3200);
 }
 
-document.addEventListener('keydown', e => {
+document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') { closeModal(); closeDeleteModal(); }
-  if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' && document.getElementById('tab-form').style.display !== 'none') submitRecord();
+  if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' &&
+      document.getElementById('tab-form').style.display !== 'none') submitRecord();
 });
 
 init();
