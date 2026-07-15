@@ -180,7 +180,15 @@
         </div>
         <div class="form-group full">
           <label class="required">ชื่อ – สกุลนักเรียน</label>
-          <input type="text" id="name" placeholder="ชื่อ นามสกุล">
+          <div style="display:flex; gap:6px; align-items:center">
+            <select id="namePrefix" style="flex:0 0 88px">
+              <option value="ด.ช.">ด.ช.</option>
+              <option value="ด.ญ.">ด.ญ.</option>
+              <option value="นาย">นาย</option>
+              <option value="น.ส.">น.ส.</option>
+            </select>
+            <input type="text" id="name" placeholder="ชื่อ นามสกุล" style="flex:1">
+          </div>
         </div>
       </div>
     </div>
@@ -428,10 +436,12 @@ async function submitRecord() {
   const offenseVal = document.getElementById('offenseType').value;
   const classPrefix = document.getElementById('classPrefix').value;
   const classRoom   = document.getElementById('classRoom').value.trim();
+  const namePrefix  = document.getElementById('namePrefix').value;
+  const nameRaw     = document.getElementById('name').value.trim();
   const data = {
     date:        document.getElementById('date').value,
     studentId:   document.getElementById('studentId').value.trim(),
-    name:        document.getElementById('name').value.trim(),
+    name:        nameRaw ? (namePrefix + ' ' + nameRaw) : '',
     class:       classRoom ? (classPrefix + classRoom) : '',
     offenseType: offenseVal === 'อื่นๆ' ? (document.getElementById('offenseOther').value.trim() || 'อื่นๆ') : offenseVal,
     verdict:     document.getElementById('verdict').value,
@@ -452,6 +462,7 @@ async function submitRecord() {
     ['studentId','name','reason','other'].forEach(id => document.getElementById(id).value='');
     document.getElementById('classRoom').value='';
     document.getElementById('classPrefix').value='ม.';
+    document.getElementById('namePrefix').value='ด.ช.';
     document.getElementById('offenseType').value='';
     document.getElementById('offenseOther').value='';
     document.getElementById('offenseOther').style.display='none';
