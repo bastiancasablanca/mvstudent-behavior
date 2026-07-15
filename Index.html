@@ -118,7 +118,9 @@
   .empty-state .emoji { font-size:36px; margin-bottom:10px; }
   .empty-state p { font-size:13.5px; }
 
-  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:900; overflow-y:auto; padding:16px; }
+  .record-warn { font-size:12px; color:#b45309; background:#fffbeb; border:1px solid #fcd34d; border-radius:6px; padding:6px 10px; margin-top:6px; line-height:1.6; }
+  .record-card.has-warning { border-color:#fcd34d; }
+  .record-card.has-warning:hover { border-color:#f59e0b; } display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:900; overflow-y:auto; padding:16px; }
   .modal-box { background:#fff; border-radius:14px; max-width:500px; margin:0 auto; padding:22px; position:relative; }
   .modal-header { font-size:15px; font-weight:700; color:var(--primary-dark); margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; }
   .modal-close { background:none; border:none; font-size:20px; cursor:pointer; color:#aaa; line-height:1; }
@@ -164,7 +166,13 @@
         </div>
         <div class="form-group">
           <label class="required">ชั้น</label>
-          <input type="text" id="class" placeholder="เช่น ม.3/2 หรือ ป.4/5">
+          <div style="display:flex; gap:6px; align-items:center">
+            <select id="classPrefix" style="flex:0 0 68px">
+              <option value="ม.">ม.</option>
+              <option value="ป.">ป.</option>
+            </select>
+            <input type="text" id="classRoom" placeholder="เช่น 31 → 3/1" style="flex:1" maxlength="6" oninput="formatClassRoom(this)">
+          </div>
         </div>
         <div class="form-group full">
           <label class="required">เลขประจำตัวนักเรียน</label>
@@ -172,7 +180,7 @@
         </div>
         <div class="form-group full">
           <label class="required">ชื่อ – สกุลนักเรียน</label>
-          <input type="text" id="name" placeholder="ชื่อ - นามสกุล">
+          <input type="text" id="name" placeholder="ชื่อ นามสกุล">
         </div>
       </div>
     </div>
@@ -202,6 +210,7 @@
             <option value="หัก 10 คะแนน">📉 หัก 10 คะแนน</option>
             <option value="หัก 15 คะแนน">📉 หัก 15 คะแนน</option>
             <option value="หัก 20 คะแนน">📉 หัก 20 คะแนน</option>
+            <option value="หัก 30 คะแนน">📉 หัก 30 คะแนน</option>
             <option value="ทัณฑ์บน">📜 ทัณฑ์บน</option>
             <option value="เขียนหนังสือขอความอนุเคราะห์ (บันทึกข้อความ)">✍️ เขียนหนังสือขอความอนุเคราะห์ (บันทึกข้อความ)</option>
           </select>
@@ -286,7 +295,16 @@
     </div>
     <div class="form-grid" style="gap:12px">
       <div class="form-group"><label>วันที่</label><input type="date" id="e_date"></div>
-      <div class="form-group"><label>ชั้น</label><input type="text" id="e_class"></div>
+      <div class="form-group">
+        <label>ชั้น</label>
+        <div style="display:flex; gap:6px; align-items:center">
+          <select id="e_classPrefix" style="flex:0 0 68px">
+            <option value="ม.">ม.</option>
+            <option value="ป.">ป.</option>
+          </select>
+          <input type="text" id="e_classRoom" placeholder="เช่น 31 → 3/1" style="flex:1" maxlength="6" oninput="formatClassRoom(this)">
+        </div>
+      </div>
       <div class="form-group full"><label>เลขประจำตัว</label><input type="text" id="e_studentId"></div>
       <div class="form-group full"><label>ชื่อ – สกุล</label><input type="text" id="e_name"></div>
       <div class="form-group full">
@@ -309,6 +327,7 @@
           <option value="หัก 10 คะแนน">📉 หัก 10 คะแนน</option>
           <option value="หัก 15 คะแนน">📉 หัก 15 คะแนน</option>
           <option value="หัก 20 คะแนน">📉 หัก 20 คะแนน</option>
+          <option value="หัก 30 คะแนน">📉 หัก 30 คะแนน</option>
           <option value="ทัณฑ์บน">📜 ทัณฑ์บน</option>
           <option value="เขียนหนังสือขอความอนุเคราะห์ (บันทึกข้อความ)">✍️ เขียนหนังสือขอความอนุเคราะห์ (บันทึกข้อความ)</option>
         </select>
@@ -343,10 +362,93 @@
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzoi7TBdRgBSi33OYPrO3apCp4NBZuRSY30DSngl0MVCYXvqlydq5VyzUSEU0Mar1M/exec';
 
 let allRecords = [];
+let studentDB = {}; // เลขประจำตัว → {name, class}
 let pendingDeleteRow = null;
 let searchTimer = null;
 
-// ── ACADEMIC YEAR ──
+// ── STUDENT DB (cross-check) ──
+async function loadStudentDB() {
+  if (Object.keys(studentDB).length > 0) return; // โหลดแล้ว
+  try {
+    const data = await fetchData(SCRIPT_URL + '?action=students&dummy=1');
+    if (data && data.students) {
+      data.students.forEach(function(s) {
+        studentDB[String(s['เลขประจำตัว'])] = {
+          name: s['ชื่อ-สกุลเต็ม'] || '',
+          cls:  s['ชั้น'] || ''
+        };
+      });
+    }
+  } catch(e) {
+    console.warn('โหลด studentDB ไม่ได้:', e.message);
+  }
+}
+
+function checkRecord(r) {
+  const sid = String(r['เลขประจำตัว'] || '').trim();
+  if (!sid || Object.keys(studentDB).length === 0) return [];
+  const ref = studentDB[sid];
+  if (!ref) return ['* ไม่พบเลขประจำตัว ' + sid + ' ในฐานข้อมูลนักเรียน'];
+  const warnings = [];
+  // เช็คชื่อ — เอาเฉพาะนามสกุลและชื่อมาเปรียบ (ตัดคำนำหน้าออก)
+  const recName = (r['ชื่อ-สกุล'] || '').replace(/^(ด\.ช\.|ด\.ญ\.|นาย|นาง|น\.ส\.|เด็กชาย|เด็กหญิง)\s*/,'').trim();
+  const refName = ref.name.replace(/^(ด\.ช\.|ด\.ญ\.|นาย|นาง|น\.ส\.|เด็กชาย|เด็กหญิง)\s*/,'').trim();
+  if (recName && refName && recName !== refName) {
+    warnings.push('* ชื่อ-สกุลอาจไม่ถูกต้อง (ฐานข้อมูล: ' + ref.name + ')');
+  }
+  // เช็คชั้น
+  const recCls = (r['ชั้น'] || '').trim();
+  const refCls = (ref.cls || '').trim();
+  if (recCls && refCls && recCls !== refCls) {
+    warnings.push('* ชั้นอาจไม่ถูกต้อง (ฐานข้อมูล: ' + refCls + ')');
+  }
+  return warnings;
+}
+
+// ── AUTO-FORMAT ชั้น/ห้อง: พิมพ์ตัวเลขดิบ → เติม / อัตโนมัติ ──
+// กติกา: หลักแรก = เลขชั้น (1-6), ที่เหลือ = เลขห้อง (1-20)
+function formatClassRoom(input) {
+  let digits = input.value.replace(/\D/g, '');
+
+  if (digits.length === 0) { input.value = ''; return; }
+
+  let gradeDigit = digits.charAt(0);
+  if (parseInt(gradeDigit) < 1 || parseInt(gradeDigit) > 6) {
+    digits = digits.slice(1);
+    if (digits.length === 0) { input.value = ''; return; }
+    gradeDigit = digits.charAt(0);
+  }
+
+  let roomDigits = digits.slice(1, 3);
+
+  if (roomDigits.length === 0) {
+    input.value = gradeDigit;
+    return;
+  }
+
+  let roomNum = parseInt(roomDigits, 10);
+
+  if (roomNum > 20) {
+    roomDigits = roomDigits.slice(0, 1);
+    roomNum = parseInt(roomDigits, 10);
+  }
+  if (roomNum < 1) {
+    input.value = gradeDigit + '/';
+    return;
+  }
+
+  input.value = gradeDigit + '/' + roomNum;
+}
+
+// ── ตรวจสอบว่าค่าชั้น/ห้องถูกต้องสมบูรณ์ก่อนบันทึก ──
+function isValidClassRoom(val) {
+  const m = String(val || '').match(/^([1-6])\/(\d{1,2})$/);
+  if (!m) return false;
+  const room = parseInt(m[2], 10);
+  return room >= 1 && room <= 20;
+}
+
+
 function getCurrentThaiAcademicYear() {
   const now = new Date();
   const adYear = now.getFullYear();
@@ -399,11 +501,13 @@ function toggleEditOffenseOther() {
 // ── SUBMIT ──
 async function submitRecord() {
   const offenseVal = document.getElementById('offenseType').value;
+  const classPrefix = document.getElementById('classPrefix').value;
+  const classRoom   = document.getElementById('classRoom').value.trim();
   const data = {
     date:        document.getElementById('date').value,
     studentId:   document.getElementById('studentId').value.trim(),
     name:        document.getElementById('name').value.trim(),
-    class:       document.getElementById('class').value.trim(),
+    class:       classRoom ? (classPrefix + classRoom) : '',
     offenseType: offenseVal === 'อื่นๆ' ? (document.getElementById('offenseOther').value.trim() || 'อื่นๆ') : offenseVal,
     verdict:     document.getElementById('verdict').value,
     reason:      document.getElementById('reason').value.trim(),
@@ -412,12 +516,17 @@ async function submitRecord() {
   if (!data.date || !data.studentId || !data.name || !data.class || !data.offenseType || !data.verdict) {
     showToast('❌ กรุณากรอกข้อมูลที่จำเป็นให้ครบ', true); return;
   }
+  if (!isValidClassRoom(classRoom)) {
+    showToast('❌ กรุณากรอกชั้น/ห้องให้ถูกต้อง (เช่น 3/1)', true); return;
+  }
   const btn = document.getElementById('submitBtn');
   btn.classList.add('loading'); btn.disabled = true;
   try {
     await fetch(SCRIPT_URL, { method:'POST', mode:'no-cors', body:JSON.stringify(data), headers:{'Content-Type':'application/json'} });
     showToast('✅ บันทึกข้อมูลสำเร็จ');
-    ['studentId','name','class','reason','other'].forEach(id => document.getElementById(id).value='');
+    ['studentId','name','reason','other'].forEach(id => document.getElementById(id).value='');
+    document.getElementById('classRoom').value='';
+    document.getElementById('classPrefix').value='ม.';
     document.getElementById('offenseType').value='';
     document.getElementById('offenseOther').value='';
     document.getElementById('offenseOther').style.display='none';
@@ -461,6 +570,7 @@ async function doSearch() {
   if (q)     url += '&q='     + encodeURIComponent(q);
 
   try {
+    await loadStudentDB();
     const json = await fetchData(url);
     allRecords = json.records || [];
     renderRecords(allRecords, { year, level, term, q });
@@ -543,7 +653,11 @@ function renderRecords(records, filters) {
     const term    = r['เทอม'] ? 'เทอม ' + r['เทอม'] : '';
     const year    = r['ปีการศึกษา'] ? 'ปี ' + r['ปีการศึกษา'] : '';
     const realIdx = records.length - 1 - idx;
-    return '<div class="record-card">' +
+    const warnings = checkRecord(r);
+    const warnHtml = warnings.length
+      ? '<div class="record-warn">' + warnings.map(function(w){ return '⚠️ ' + w; }).join('<br>') + '</div>'
+      : '';
+    return '<div class="record-card' + (warnings.length ? ' has-warning' : '') + '">' +
       '<div class="record-header">' +
         '<div class="record-name">' + name + '</div>' +
         '<div class="record-date">' + date + '</div>' +
@@ -557,6 +671,7 @@ function renderRecords(records, filters) {
       '</div>' +
       (reason ? '<div class="record-note">📝 ' + reason + '</div>' : '') +
       (other  ? '<div class="record-note" style="color:#999">💬 ' + other + '</div>' : '') +
+      warnHtml +
     '</div>';
   }).join('');
 }
@@ -565,7 +680,15 @@ function renderRecords(records, filters) {
 function openEdit(idx) {
   const r = allRecords[idx];
   document.getElementById('e_date').value      = r['วัน/เดือน/ปี'] || r['วันที่'] || '';
-  document.getElementById('e_class').value     = r['ชั้น'] || '';
+  const clsVal = (r['ชั้น'] || '').trim();
+  const clsMatch = clsVal.match(/^(ม\.|ป\.)\s*(.*)$/);
+  if (clsMatch) {
+    document.getElementById('e_classPrefix').value = clsMatch[1];
+    document.getElementById('e_classRoom').value   = clsMatch[2];
+  } else {
+    document.getElementById('e_classPrefix').value = 'ม.';
+    document.getElementById('e_classRoom').value   = clsVal;
+  }
   document.getElementById('e_studentId').value = r['เลขประจำตัว'] || '';
   document.getElementById('e_name').value      = r['ชื่อ-สกุล'] || '';
   document.getElementById('e_reason').value    = r['เหตุการณ์'] || '';
@@ -588,18 +711,23 @@ function closeModal() { document.getElementById('editModal').style.display = 'no
 
 async function saveEdit() {
   const offenseVal = document.getElementById('e_offenseType').value;
+  const eClassPrefix = document.getElementById('e_classPrefix').value;
+  const eClassRoom   = document.getElementById('e_classRoom').value.trim();
   const data = {
     action:      'update',
     rowIndex:    parseInt(document.getElementById('e_rowIndex').value),
     date:        document.getElementById('e_date').value,
     studentId:   document.getElementById('e_studentId').value.trim(),
     name:        document.getElementById('e_name').value.trim(),
-    class:       document.getElementById('e_class').value.trim(),
+    class:       eClassRoom ? (eClassPrefix + eClassRoom) : '',
     offenseType: offenseVal === 'อื่นๆ' ? (document.getElementById('e_offenseOther').value.trim() || 'อื่นๆ') : offenseVal,
     verdict:     document.getElementById('e_verdict').value,
     reason:      document.getElementById('e_reason').value.trim(),
     other:       document.getElementById('e_other').value.trim()
   };
+  if (!isValidClassRoom(eClassRoom)) {
+    showToast('❌ กรุณากรอกชั้น/ห้องให้ถูกต้อง (เช่น 3/1)', true); return;
+  }
   const btn = document.querySelector('#editModal .submit-btn');
   btn.classList.add('loading'); btn.disabled = true;
   try {
