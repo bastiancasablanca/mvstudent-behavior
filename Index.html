@@ -58,10 +58,7 @@
   .submit-btn:active { transform:scale(0.99); }
   .submit-btn:disabled { background:var(--text-muted); cursor:not-allowed; }
   .submit-btn .spinner { display:none; width:17px; height:17px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite; margin:0 auto; }
-  
-  .btn-cancel { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; margin-top: 10px; }
-  .btn-cancel:hover { background: #e2e8f0; color: #1e293b; }
-  
+
   .submit-btn.loading .btn-text { display:none; }
   .submit-btn.loading .spinner { display:block; }
   @keyframes spin { to { transform:rotate(360deg); } }
@@ -94,7 +91,6 @@
   .record-card:hover { border-color:var(--secondary-base); box-shadow:0 2px 10px rgba(70,112,85,0.10); }
   .record-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:7px; }
   .record-name { font-weight:700; font-size:14.5px; color:var(--primary-dark); }
-  .record-name .rec-id { font-size:12.5px; color:var(--text-muted); font-weight:500; margin-right:4px; font-family:'IBM Plex Mono',monospace; }
   .record-date { font-size:11.5px; color:var(--text-muted); font-family:'IBM Plex Mono',monospace; white-space:nowrap; }
   .record-meta { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:5px; }
   .tag { padding:2.5px 9px; border-radius:20px; font-size:11.5px; font-weight:600; white-space:nowrap; }
@@ -104,11 +100,6 @@
   .tag-result { background:var(--accent-soft); color:var(--accent); }
   .tag-term   { background:#FFF8E1; color:#F57F17; }
   .record-note { font-size:12.5px; color:var(--text-mid); margin-top:4px; line-height:1.5; }
-  
-  .record-actions { display: flex; gap: 8px; margin-top: 10px; border-top: 1px dashed var(--border); padding-top: 10px; }
-  .btn-action { flex: 1; padding: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; font-family: 'Sarabun', sans-serif; font-size: 12.5px; cursor: pointer; color: var(--text-mid); font-weight: 500; transition: 0.2s; }
-  .btn-action:hover { background: var(--green-pale); border-color: var(--secondary-base); color: var(--primary-dark); }
-  .btn-action.del:hover { background: #fee2e2; border-color: #ef4444; color: #b91c1c; }
 
   .placeholder-state { text-align:center; padding:52px 16px; color:var(--text-muted); }
   .placeholder-state .emoji { font-size:42px; margin-bottom:12px; }
@@ -153,9 +144,6 @@
 
   <!-- FORM TAB -->
   <div id="tab-form">
-    <!-- 2. กล่องเก็บ ID ซ่อนไว้เช็คสถานะการ Edit/Insert -->
-    <input type="hidden" id="recordId" value="">
-    
     <div class="card">
       <div class="card-title">ข้อมูลนักเรียน</div>
       <div class="form-grid">
@@ -232,14 +220,10 @@
           <input type="text" id="other" placeholder="หมายเหตุเพิ่มเติม">
         </div>
       </div>
-      
+
       <button class="submit-btn" id="submitBtn" onclick="submitRecord()">
         <span class="btn-text">💾 บันทึกข้อมูล</span>
         <div class="spinner"></div>
-      </button>
-      
-      <button class="submit-btn btn-cancel" id="cancelEditBtn" onclick="cancelEdit()" style="display:none">
-        <span class="btn-text">❌ ยกเลิกการแก้ไข</span>
       </button>
     </div>
   </div>
@@ -302,7 +286,7 @@
 <div class="toast" id="toast"><span id="toastMsg"></span></div>
 
 <script>
-// --- วาง URL จากการ Deploy ของ Web App ---
+// --- วาง URL จากการ Deploy ของ Web App (คงเดิม ไม่เปลี่ยน) ---
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzXd_-XWtFXsKH95gu13fV-czxl64H5CnMcGlUGDaish5F1S-NugPCWJxTKWiApQLNd/exec';
 
 let allRecords = [];
@@ -367,11 +351,8 @@ function toggleOffenseOther() {
   document.getElementById('offenseOther').style.display = document.getElementById('offenseType').value === 'อื่นๆ' ? 'block' : 'none';
 }
 
-// ── 12. Save Reset (ล้างฟอร์ม + คืนสู่โหมด Insert) ──
-function cancelEdit() {
-  document.getElementById('recordId').value = '';
-  document.getElementById('submitBtn').querySelector('.btn-text').textContent = '💾 บันทึกข้อมูล';
-  document.getElementById('cancelEditBtn').style.display = 'none';
+// ล้างฟอร์มหลังบันทึกสำเร็จ (ไม่มีโหมดแก้ไขอีกต่อไป — บันทึกแล้วถือเป็นข้อมูลถาวร)
+function resetForm() {
   ['studentId','name','reason','other'].forEach(id => document.getElementById(id).value='');
   document.getElementById('classRoom').value='';
   document.getElementById('classPrefix').value='ม.';
@@ -383,19 +364,15 @@ function cancelEdit() {
   document.getElementById('date').value = new Date().toISOString().split('T')[0];
 }
 
-// ── 9. & 12. Submit/Update ──
+// ── บันทึกข้อมูลใหม่เท่านั้น (Create only) ──
 async function submitRecord() {
   const offenseVal = document.getElementById('offenseType').value;
   const classPrefix = document.getElementById('classPrefix').value;
   const classRoom   = document.getElementById('classRoom').value.trim();
   const namePrefix  = document.getElementById('namePrefix').value;
   const nameRaw     = document.getElementById('name').value.trim();
-  const rId         = document.getElementById('recordId').value;
-  
-  // โครงสร้าง Payload ที่ชัดเจน ตาม Requirement ข้อ 9
+
   const data = {
-    action:      rId ? 'update' : 'insert',
-    id:          rId,
     date:        document.getElementById('date').value,
     studentId:   document.getElementById('studentId').value.trim(),
     name:        nameRaw ? (namePrefix + ' ' + nameRaw) : '',
@@ -417,15 +394,15 @@ async function submitRecord() {
   btn.classList.add('loading'); btn.disabled = true;
 
   try {
-    const response = await fetch(SCRIPT_URL, { 
-      method: 'POST', 
+    const response = await fetch(SCRIPT_URL, {
+      method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(data)
     });
     const result = await response.json();
     if (result.status === 'ok') {
-      showToast(rId ? '✅ แก้ไขข้อมูลสำเร็จ' : '✅ บันทึกข้อมูลสำเร็จ');
-      cancelEdit(); 
+      showToast('✅ บันทึกข้อมูลสำเร็จ');
+      resetForm();
     } else {
       showToast('❌ ' + (result.message || 'เกิดข้อผิดพลาด'), true);
     }
@@ -465,10 +442,11 @@ async function doSearch() {
 
   try {
     const json = await fetchData(url);
+    // Apps Script ส่งข้อมูลมาโดยข้อมูลใหม่สุดอยู่บนสุดแล้ว (reverse ฝั่ง backend)
     allRecords = json.records || [];
     renderRecords(allRecords, { year, level, term, q });
   } catch(e) {
-    document.getElementById('recordsList').innerHTML = '<div class="empty-state"><div class="emoji">❌</div><p>โหลดข้อมูลไม่ได้<br><small>' + e.message + '</small></p></div>';
+    document.getElementById('recordsList').innerHTML = '<div class="empty-state"><div class="emoji">❌</div><p>โหลดข้อมูลไม่ได้<br><small>' + escapeHtml(e.message) + '</small></p></div>';
   }
 }
 
@@ -502,92 +480,27 @@ function formatDate(val) {
   return s;
 }
 
-// ── 10. Edit Mode (ดึงข้อมูลกลับใส่ฟอร์มและตั้งค่า id) ──
-window.editRecord = function(id) {
-  const r = allRecords.find(rec => String(rec.id) === String(id));
-  if (!r) return;
-  
-  document.getElementById('recordId').value = id;
-  
-  let d = r['วัน/เดือน/ปี'] || r['วันที่'] || '';
-  if (d.includes('/')) {
-    let parts = d.split('/');
-    if (parts.length === 3) document.getElementById('date').value = `${parts[2]}-${parts[1]}-${parts[0]}`;
-  } else if (d.match(/^\d{4}-\d{2}-\d{2}/)) {
-    document.getElementById('date').value = d.substring(0, 10);
-  }
-  
-  document.getElementById('studentId').value = r['เลขประจำตัว'] || '';
-  
-  let fullName = r['ชื่อ-สกุล'] || '';
-  let prefix = "ด.ช.";
-  ['ด.ช.', 'ด.ญ.', 'นาย', 'น.ส.'].forEach(p => {
-    if (fullName.startsWith(p)) { prefix = p; fullName = fullName.substring(p.length).trim(); }
-  });
-  document.getElementById('namePrefix').value = prefix;
-  document.getElementById('name').value = fullName;
-  
-  let cls = r['ชั้น'] || '';
-  let clsPrefix = "ม.";
-  if (cls.startsWith("ป.")) { clsPrefix = "ป."; cls = cls.replace("ป.", "").trim(); }
-  else if (cls.startsWith("ม.")) { clsPrefix = "ม."; cls = cls.replace("ม.", "").trim(); }
-  document.getElementById('classPrefix').value = clsPrefix;
-  document.getElementById('classRoom').value = cls;
-  
-  let offense = r['ประเภทความผิด'] || '';
-  let sel = document.getElementById('offenseType');
-  if (Array.from(sel.options).some(o => o.value === offense) && offense !== 'อื่นๆ') {
-    sel.value = offense;
-    document.getElementById('offenseOther').style.display = 'none';
-  } else {
-    sel.value = "อื่นๆ";
-    document.getElementById('offenseOther').style.display = 'block';
-    document.getElementById('offenseOther').value = offense;
-  }
-  
-  document.getElementById('verdict').value = r['ผลการตัดสิน'] || '';
-  document.getElementById('reason').value = r['เหตุการณ์'] || '';
-  document.getElementById('other').value = r['อื่นๆ'] || '';
-  
-  document.getElementById('submitBtn').querySelector('.btn-text').textContent = '💾 บันทึกการแก้ไข';
-  document.getElementById('cancelEditBtn').style.display = 'block';
-  
-  switchTab('form');
-  window.scrollTo(0,0);
-  showToast('✏️ เข้าสู่โหมดแก้ไขข้อมูล (ID: ' + id + ')');
-};
-
-// ── 11. Delete by ID ──
-window.deleteRecord = async function(id) {
-  if (!confirm('คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลรายการนี้ (ID: ' + id + ') ?')) return;
-  
-  try {
-    const response = await fetch(SCRIPT_URL, { 
-      method: 'POST', 
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'delete', id: id })
-    });
-    const result = await response.json();
-    if (result.status === 'ok') {
-      showToast('✅ ลบข้อมูลสำเร็จ');
-      doSearch(); 
-    } else {
-      showToast('❌ ' + (result.message || 'ลบข้อมูลไม่สำเร็จ'), true);
-    }
-  } catch(e) {
-    showToast('❌ ไม่สามารถเชื่อมต่อได้', true);
-  }
-};
+// Escape ข้อความก่อนแทรกลง innerHTML เพื่อป้องกัน HTML/Script Injection
+// (ครูหลายคนกรอกข้อความอิสระในช่อง เหตุการณ์/อื่นๆ/ชื่อ ได้ จึงต้อง escape เสมอก่อนแสดงผล)
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
 
 function renderRecords(records, filters) {
   const container = document.getElementById('recordsList');
   const summary   = document.getElementById('resultSummary');
 
   const tags = [];
-  if (filters.year)  tags.push('<span class="filter-tag">ปี ' + filters.year + '</span>');
-  if (filters.level) tags.push('<span class="filter-tag">' + filters.level + '</span>');
-  if (filters.term)  tags.push('<span class="filter-tag">เทอม ' + filters.term + '</span>');
-  if (filters.q)     tags.push('<span class="filter-tag">🔍 "' + filters.q + '"</span>');
+  if (filters.year)  tags.push('<span class="filter-tag">ปี ' + escapeHtml(filters.year) + '</span>');
+  if (filters.level) tags.push('<span class="filter-tag">' + escapeHtml(filters.level) + '</span>');
+  if (filters.term)  tags.push('<span class="filter-tag">เทอม ' + escapeHtml(filters.term) + '</span>');
+  if (filters.q)     tags.push('<span class="filter-tag">🔍 "' + escapeHtml(filters.q) + '"</span>');
 
   summary.style.display = 'flex';
   summary.innerHTML = '<span>พบ <strong>' + records.length + '</strong> รายการ</span>' +
@@ -599,40 +512,32 @@ function renderRecords(records, filters) {
   }
 
   container.innerHTML = records.map(function(r) {
-    const recId   = r['id'] ? '<span class="rec-id">#' + r['id'] + '</span>' : '';
-    const date    = formatDate(r['วัน/เดือน/ปี'] || r['วันที่'] || '');
-    const name    = r['ชื่อ-สกุล'] || '-';
-    const cls     = r['ชั้น'] || '-';
-    const sid     = r['เลขประจำตัว'] || '-';
-    const level   = r['ระดับชั้น'] || '';
-    const offense = r['ประเภทความผิด'] || '-';
-    const verdict = r['ผลการตัดสิน'] || '-';
-    const reason  = r['เหตุการณ์'] || '';
-    const other   = r['อื่นๆ'] || '';
-    const term    = r['เทอม'] ? 'เทอม ' + r['เทอม'] : '';
-    const year    = r['ปีการศึกษา'] ? 'ปี ' + r['ปีการศึกษา'] : '';
+    const date    = escapeHtml(formatDate(r['วัน/เดือน/ปี'] || ''));
+    const name    = escapeHtml(r['ชื่อ-สกุล'] || '-');
+    const cls     = escapeHtml(r['ชั้น'] || '-');
+    const sid     = escapeHtml(r['เลขประจำตัว'] || '-');
+    const level   = escapeHtml(r['ระดับชั้น'] || '');
+    const offense = escapeHtml(r['ประเภทความผิด'] || '-');
+    const verdict = escapeHtml(r['ผลการตัดสิน'] || '-');
+    const reason  = escapeHtml(r['เหตุการณ์'] || '');
+    const other   = escapeHtml(r['อื่นๆ'] || '');
+    const term    = r['เทอม'] ? 'เทอม ' + escapeHtml(r['เทอม']) : '';
+    const year    = r['ปีการศึกษา'] ? 'ปี ' + escapeHtml(r['ปีการศึกษา']) : '';
     const warnings = [];
-    
-    // 8. ให้ Google Sheet เป็นคนตรวจเองผ่าน Formula ในคอลัมน์ถัดๆ ไป (ถ้ามี)
-    // ตรงนี้ดึงผลการเช็คความถูกต้องจากชีตคอลัมน์ N (ถ้ามีสูตรตั้งไว้) มาแสดง
-    const sheetCheck = r['เช็คความถูกต้องของข้อมูล'] || ''; 
-    if(sheetCheck && !sheetCheck.includes("✅") && sheetCheck.trim() !== "") {
-        warnings.push("* " + sheetCheck);
+
+    // ดึงผลเช็คความถูกต้องจากสูตรในคอลัมน์ "เช็คความถูกต้องของข้อมูล" (คำนวณเองในชีต ไม่ได้เขียนโดย Apps Script)
+    const sheetCheck = r['เช็คความถูกต้องของข้อมูล'] || '';
+    if (sheetCheck && !String(sheetCheck).includes("✅") && String(sheetCheck).trim() !== "") {
+        warnings.push("* " + escapeHtml(sheetCheck));
     }
-    
+
     const warnHtml = warnings.length
       ? '<div class="record-warn">' + warnings.map(function(w){ return '⚠️ ' + w; }).join('<br>') + '</div>'
       : '';
-      
-    const actionHtml = r['id'] ? 
-      '<div class="record-actions">' +
-        '<button class="btn-action" onclick="editRecord(' + r['id'] + ')">✏️ แก้ไข</button>' +
-        '<button class="btn-action del" onclick="deleteRecord(' + r['id'] + ')">🗑️ ลบ</button>' +
-      '</div>' : '';
 
     return '<div class="record-card' + (warnings.length ? ' has-warning' : '') + '">' +
       '<div class="record-header">' +
-        '<div class="record-name">' + recId + name + '</div>' +
+        '<div class="record-name">' + name + '</div>' +
         '<div class="record-date">' + date + '</div>' +
       '</div>' +
       '<div class="record-meta">' +
@@ -645,7 +550,6 @@ function renderRecords(records, filters) {
       (reason ? '<div class="record-note">📝 ' + reason + '</div>' : '') +
       (other  ? '<div class="record-note" style="color:#999">💬 ' + other + '</div>' : '') +
       warnHtml +
-      actionHtml +
     '</div>';
   }).join('');
 }
