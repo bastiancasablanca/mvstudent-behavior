@@ -100,6 +100,7 @@
   .record-card:hover { border-color:var(--secondary-base); box-shadow:0 2px 10px rgba(70,112,85,0.10); }
   .record-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:7px; }
   .record-name { font-weight:700; font-size:14.5px; color:var(--primary-dark); }
+  .record-name .rec-id { font-size:12.5px; color:var(--text-muted); font-weight:500; margin-right:4px; font-family:'IBM Plex Mono',monospace; }
   .record-date { font-size:11.5px; color:var(--text-muted); font-family:'IBM Plex Mono',monospace; white-space:nowrap; }
   .record-meta { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:5px; }
   .tag { padding:2.5px 9px; border-radius:20px; font-size:11.5px; font-weight:600; white-space:nowrap; }
@@ -120,11 +121,7 @@
 
   .record-warn { font-size:12px; color:#b45309; background:#fffbeb; border:1px solid #fcd34d; border-radius:6px; padding:6px 10px; margin-top:6px; line-height:1.6; }
   .record-card.has-warning { border-color:#fcd34d; }
-  .record-card.has-warning:hover { border-color:#f59e0b; } display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:900; overflow-y:auto; padding:16px; }
-  .modal-box { background:#fff; border-radius:14px; max-width:500px; margin:0 auto; padding:22px; position:relative; }
-  .modal-header { font-size:15px; font-weight:700; color:var(--primary-dark); margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; }
-  .modal-close { background:none; border:none; font-size:20px; cursor:pointer; color:#aaa; line-height:1; }
-  .modal-close:hover { color:#555; }
+  .record-card.has-warning:hover { border-color:#f59e0b; }
 
   .toast { position:fixed; bottom:22px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--primary-dark); color:#fff; padding:11px 22px; border-radius:50px; font-size:13.5px; font-weight:600; box-shadow:var(--shadow-lg); transition:transform 0.32s cubic-bezier(0.34,1.56,0.64,1); z-index:999; white-space:nowrap; display:flex; align-items:center; gap:8px; }
   .toast.show { transform:translateX(-50%) translateY(0); }
@@ -298,6 +295,7 @@
 <div class="toast" id="toast"><span id="toastMsg"></span></div>
 
 <script>
+// --- URL ที่อัปเดตแล้ว ใช้ดึง API ได้เลย ---
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzoi7TBdRgBSi33OYPrO3apCp4NBZuRSY30DSngl0MVCYXvqlydq5VyzUSEU0Mar1M/exec';
 
 let allRecords = [];
@@ -328,13 +326,11 @@ function checkRecord(r) {
   const ref = studentDB[sid];
   if (!ref) return ['* ไม่พบเลขประจำตัว ' + sid + ' ในฐานข้อมูลนักเรียน'];
   const warnings = [];
-  // เช็คชื่อ — เอาเฉพาะนามสกุลและชื่อมาเปรียบ (ตัดคำนำหน้าออก)
   const recName = (r['ชื่อ-สกุล'] || '').replace(/^(ด\.ช\.|ด\.ญ\.|นาย|นาง|น\.ส\.|เด็กชาย|เด็กหญิง)\s*/,'').trim();
   const refName = ref.name.replace(/^(ด\.ช\.|ด\.ญ\.|นาย|นาง|น\.ส\.|เด็กชาย|เด็กหญิง)\s*/,'').trim();
   if (recName && refName && recName !== refName) {
     warnings.push('* ชื่อ-สกุลอาจไม่ถูกต้อง (ฐานข้อมูล: ' + ref.name + ')');
   }
-  // เช็คชั้น
   const recCls = (r['ชั้น'] || '').trim();
   const refCls = (ref.cls || '').trim();
   if (recCls && refCls && recCls !== refCls) {
@@ -344,7 +340,6 @@ function checkRecord(r) {
 }
 
 // ── AUTO-FORMAT ชั้น/ห้อง: พิมพ์ตัวเลขดิบ → เติม / อัตโนมัติ ──
-// กติกา: หลักแรก = เลขชั้น (1-6), ที่เหลือ = เลขห้อง (1-20)
 function formatClassRoom(input) {
   let digits = input.value.replace(/\D/g, '');
 
@@ -378,14 +373,12 @@ function formatClassRoom(input) {
   input.value = gradeDigit + '/' + roomNum;
 }
 
-// ── ตรวจสอบว่าค่าชั้น/ห้องถูกต้องสมบูรณ์ก่อนบันทึก ──
 function isValidClassRoom(val) {
   const m = String(val || '').match(/^([1-6])\/(\d{1,2})$/);
   if (!m) return false;
   const room = parseInt(m[2], 10);
   return room >= 1 && room <= 20;
 }
-
 
 function getCurrentThaiAcademicYear() {
   const now = new Date();
@@ -544,17 +537,14 @@ function debounceSearch() {
 function formatDate(val) {
   if (!val) return '';
   var s = String(val);
-  // ISO format: 2026-06-12T... or 2026-06-12
   if (s.match(/^\d{4}-\d{2}-\d{2}/)) {
     var parts = s.substring(0, 10).split('-');
     return parts[2] + '/' + parts[1] + '/' + parts[0];
   }
-  // Serial number (Excel/Sheets date)
   if (s.match(/^\d{5}$/)) {
     var d = new Date(Math.round((parseFloat(s) - 25569) * 86400 * 1000));
     return ('0'+d.getUTCDate()).slice(-2) + '/' + ('0'+(d.getUTCMonth()+1)).slice(-2) + '/' + d.getUTCFullYear();
   }
-  // Already formatted dd/mm/yyyy
   return s;
 }
 
@@ -578,6 +568,7 @@ function renderRecords(records, filters) {
   }
 
   container.innerHTML = [...records].reverse().map(function(r, idx) {
+    const recId   = r['id'] ? '<span class="rec-id">#' + r['id'] + '</span>' : '';
     const date    = formatDate(r['วัน/เดือน/ปี'] || r['วันที่'] || '');
     const name    = r['ชื่อ-สกุล'] || '-';
     const cls     = r['ชั้น'] || '-';
@@ -589,14 +580,13 @@ function renderRecords(records, filters) {
     const other   = r['อื่นๆ'] || '';
     const term    = r['เทอม'] ? 'เทอม ' + r['เทอม'] : '';
     const year    = r['ปีการศึกษา'] ? 'ปี ' + r['ปีการศึกษา'] : '';
-    const realIdx = records.length - 1 - idx;
     const warnings = checkRecord(r);
     const warnHtml = warnings.length
       ? '<div class="record-warn">' + warnings.map(function(w){ return '⚠️ ' + w; }).join('<br>') + '</div>'
       : '';
     return '<div class="record-card' + (warnings.length ? ' has-warning' : '') + '">' +
       '<div class="record-header">' +
-        '<div class="record-name">' + name + '</div>' +
+        '<div class="record-name">' + recId + name + '</div>' +
         '<div class="record-date">' + date + '</div>' +
       '</div>' +
       '<div class="record-meta">' +
