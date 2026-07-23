@@ -78,6 +78,7 @@
 
   .search-row { display:flex; gap:8px; margin-bottom:14px; }
   .search-row input { flex:1; }
+  .search-row select { flex:1; }
   .btn-refresh { padding:9px 14px; background:var(--bg); color:var(--text-mid); border:1.5px solid var(--border); border-radius:9px; font-size:14px; cursor:pointer; transition:all 0.2s; }
   .btn-refresh:hover { border-color:var(--secondary-base); color:var(--secondary-base); }
 
@@ -87,19 +88,35 @@
   .filter-tag { padding:3px 9px; background:var(--green-pale); color:var(--primary-dark); border-radius:20px; font-size:11.5px; font-weight:600; }
 
   .records-list { display:flex; flex-direction:column; gap:9px; }
-  .record-card { background:var(--white); border:1.5px solid var(--border); border-radius:11px; padding:13px 15px; transition:border-color 0.18s, box-shadow 0.18s; }
+  .record-card { background:var(--white); border:1.5px solid var(--border); border-radius:12px; padding:14px 16px; transition:border-color 0.18s, box-shadow 0.18s, background-color 0.18s; }
   .record-card:hover { border-color:var(--secondary-base); box-shadow:0 2px 10px rgba(70,112,85,0.10); }
-  .record-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:7px; }
-  .record-name { font-weight:700; font-size:14.5px; color:var(--primary-dark); }
-  .record-date { font-size:11.5px; color:var(--text-muted); font-family:'IBM Plex Mono',monospace; white-space:nowrap; }
-  .record-meta { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:5px; }
-  .tag { padding:2.5px 9px; border-radius:20px; font-size:11.5px; font-weight:600; white-space:nowrap; }
-  .tag-class  { background:#E3F2FD; color:#1565C0; }
-  .tag-level  { background:var(--green-pale); color:var(--primary-dark); }
-  .tag-type   { background:#F3E5F5; color:#6A1B9A; }
-  .tag-result { background:var(--accent-soft); color:var(--accent); }
-  .tag-term   { background:#FFF8E1; color:#F57F17; }
-  .record-note { font-size:12.5px; color:var(--text-mid); margin-top:4px; line-height:1.5; }
+  .record-top { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+  .record-name { font-weight:700; font-size:19px; color:var(--primary-dark); line-height:1.3; flex:1; min-width:0; }
+  .record-offense { display:inline-block; padding:5px 14px; border-radius:20px; font-size:13px; font-weight:700; white-space:nowrap; flex-shrink:0; }
+  .record-sub { display:flex; justify-content:space-between; align-items:center; margin-top:4px; }
+  .record-idclass { font-size:13.5px; color:var(--text-mid); }
+  .record-date { font-size:13.5px; color:var(--text-muted); font-family:'IBM Plex Mono',monospace; white-space:nowrap; }
+
+  .record-toggle-row { display:flex; justify-content:flex-end; margin-top:10px; }
+  .record-toggle-btn { padding:5px 12px; background:transparent; border:1.5px solid var(--border); border-radius:8px; color:var(--text-mid); font-family:'Sarabun',sans-serif; font-size:12.5px; font-weight:600; cursor:pointer; transition:all 0.18s; display:flex; align-items:center; gap:4px; }
+  .record-toggle-btn:hover { border-color:var(--secondary-base); color:var(--secondary-base); background:var(--bg); }
+  .record-toggle-btn .chev { transition:transform 0.2s; display:inline-block; }
+  .record-toggle-btn.open .chev { transform:rotate(180deg); }
+
+  .record-details { display:none; margin-top:12px; border-top:1px dashed var(--border); padding-top:12px; flex-direction:column; gap:9px; }
+  .record-details.open { display:flex; }
+  .record-detail-label { font-size:11px; color:var(--text-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.4px; margin-bottom:2px; }
+  .record-detail-value { font-size:13.5px; color:var(--text-primary); line-height:1.6; }
+  .record-detail-row { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+  .record-check-ok { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; background:#E8F5E9; color:#2E7D32; border-radius:8px; font-size:12px; font-weight:600; }
+  .record-savedat { font-size:11.5px; color:var(--text-muted); }
+
+  .record-card.has-warning { background:#FDECEA; border-color:#EF9A9A; }
+  .record-card.has-warning:hover { border-color:#E57373; }
+  .record-card.has-warning .record-name,
+  .record-card.has-warning .record-idclass,
+  .record-card.has-warning .record-date { color:#B71C1C; }
+  .record-warn-badge { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; background:#fff; color:#C62828; border-radius:8px; font-size:12px; font-weight:600; margin-top:8px; }
 
   .placeholder-state { text-align:center; padding:52px 16px; color:var(--text-muted); }
   .placeholder-state .emoji { font-size:42px; margin-bottom:12px; }
@@ -109,10 +126,7 @@
   .empty-state .emoji { font-size:36px; margin-bottom:10px; }
   .empty-state p { font-size:13.5px; }
 
-  .record-warn { font-size:12px; color:#b45309; background:#fffbeb; border:1px solid #fcd34d; border-radius:6px; padding:6px 10px; margin-top:6px; line-height:1.6; }
-  .record-card.has-warning { border-color:#fcd34d; }
-  .record-card.has-warning:hover { border-color:#f59e0b; }
-
+  
   .toast { position:fixed; bottom:22px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--primary-dark); color:#fff; padding:11px 22px; border-radius:50px; font-size:13.5px; font-weight:600; box-shadow:var(--shadow-lg); transition:transform 0.32s cubic-bezier(0.34,1.56,0.64,1); z-index:999; white-space:nowrap; display:flex; align-items:center; gap:8px; }
   .toast.show { transform:translateX(-50%) translateY(0); }
   .toast.error { background:#c62828; }
@@ -185,7 +199,7 @@
       <div class="form-grid">
         <div class="form-group full">
           <label class="required">ประเภทความผิดนักเรียน</label>
-          <select id="offenseType" onchange="toggleOffenseOther()">
+          <select id="offenseType">
             <option value="">— เลือกประเภทความผิด —</option>
             <option value="โทรศัพท์">📱 โทรศัพท์</option>
             <option value="ชู้สาว">💔 ชู้สาว</option>
@@ -196,7 +210,6 @@
             <option value="พฤติกรรมไม่เหมาะสม">👎 พฤติกรรมไม่เหมาะสม</option>
             <option value="อื่นๆ">📌 อื่นๆ</option>
           </select>
-          <input type="text" id="offenseOther" placeholder="ระบุประเภทความผิด..." style="display:none;margin-top:8px">
         </div>
         <div class="form-group full">
           <label class="required">ผลการตัดสิน</label>
@@ -215,7 +228,7 @@
         </div>
         <div class="form-group full">
           <label>เหตุการณ์ / โปรดระบุ</label>
-          <textarea id="reason" placeholder="อธิบายเหตุการณ์โดยละเอียด..."></textarea>
+          <textarea id="reason" placeholder="อธิบายเหตุการณ์โดยละเอียด... (หากเลือกประเภท &quot;อื่นๆ&quot; กรุณาระบุประเภทความผิดในช่องนี้ด้วย)"></textarea>
         </div>
         <div class="form-group full">
           <label>อื่นๆ</label>
@@ -268,6 +281,17 @@
       <div class="card" style="padding:16px 18px">
         <div class="search-row">
           <input type="text" id="searchInput" placeholder="ค้นหาชื่อ, เลขประจำตัว, ชั้น..." oninput="debounceSearch()">
+          <select id="f_offense" onchange="doSearch()">
+            <option value="">ประเภทความผิด — ทั้งหมด</option>
+            <option value="โทรศัพท์">📱 โทรศัพท์</option>
+            <option value="ชู้สาว">💔 ชู้สาว</option>
+            <option value="ทะเลาะวิวาท">⚡ ทะเลาะวิวาท</option>
+            <option value="ขโมยของ">🚨 ขโมยของ</option>
+            <option value="ยาเสพติด">⚠️ ยาเสพติด</option>
+            <option value="หนีเรียน / หนีกิจกรรม">🏃‍♂️ หนีเรียน / หนีกิจกรรม</option>
+            <option value="พฤติกรรมไม่เหมาะสม">👎 พฤติกรรมไม่เหมาะสม</option>
+            <option value="อื่นๆ">📌 อื่นๆ</option>
+          </select>
           <button class="btn-refresh" onclick="doSearch()">🔄</button>
         </div>
         <div id="resultSummary" class="result-summary" style="display:none"></div>
@@ -349,10 +373,6 @@ function switchTab(tab) {
   if (tab === 'records') { document.getElementById('resultsArea').style.display = 'none'; document.getElementById('recordsPlaceholder').style.display = 'block'; }
 }
 
-function toggleOffenseOther() {
-  document.getElementById('offenseOther').style.display = document.getElementById('offenseType').value === 'อื่นๆ' ? 'block' : 'none';
-}
-
 // ล้างฟอร์มหลังบันทึกสำเร็จ (ไม่มีโหมดแก้ไขอีกต่อไป — บันทึกแล้วถือเป็นข้อมูลถาวร)
 function resetForm() {
   ['studentId','name','reason','other'].forEach(id => document.getElementById(id).value='');
@@ -360,8 +380,6 @@ function resetForm() {
   document.getElementById('classPrefix').value='ม.';
   document.getElementById('namePrefix').value='ด.ช.';
   document.getElementById('offenseType').value='';
-  document.getElementById('offenseOther').value='';
-  document.getElementById('offenseOther').style.display='none';
   document.getElementById('verdict').value='';
   document.getElementById('date').value = new Date().toISOString().split('T')[0];
 }
@@ -379,7 +397,7 @@ async function submitRecord() {
     studentId:   document.getElementById('studentId').value.trim(),
     name:        nameRaw ? (namePrefix + ' ' + nameRaw) : '',
     class:       classRoom ? (classPrefix + classRoom) : '',
-    offenseType: offenseVal === 'อื่นๆ' ? (document.getElementById('offenseOther').value.trim() || 'อื่นๆ') : offenseVal,
+    offenseType: offenseVal,
     verdict:     document.getElementById('verdict').value,
     reason:      document.getElementById('reason').value.trim(),
     other:       document.getElementById('other').value.trim()
@@ -420,16 +438,18 @@ function resetFilters() {
   document.getElementById('f_level').value = '';
   document.getElementById('f_term').value  = '';
   if (document.getElementById('searchInput')) document.getElementById('searchInput').value = '';
+  if (document.getElementById('f_offense')) document.getElementById('f_offense').value = '';
   document.getElementById('resultsArea').style.display = 'none';
   document.getElementById('recordsPlaceholder').style.display = 'block';
   allRecords = [];
 }
 
 async function doSearch() {
-  const year  = document.getElementById('f_year').value;
-  const level = document.getElementById('f_level').value;
-  const term  = document.getElementById('f_term').value;
-  const q     = (document.getElementById('searchInput')?.value || '').trim();
+  const year    = document.getElementById('f_year').value;
+  const level   = document.getElementById('f_level').value;
+  const term    = document.getElementById('f_term').value;
+  const offense = document.getElementById('f_offense')?.value || '';
+  const q       = (document.getElementById('searchInput')?.value || '').trim();
 
   document.getElementById('recordsPlaceholder').style.display = 'none';
   document.getElementById('resultsArea').style.display = 'block';
@@ -437,16 +457,17 @@ async function doSearch() {
   document.getElementById('recordsList').innerHTML = '<div class="empty-state"><div class="emoji">⏳</div><p>กำลังโหลด...</p></div>';
 
   let url = SCRIPT_URL + '?dummy=1';
-  if (year)  url += '&year='  + encodeURIComponent(year);
-  if (level) url += '&level=' + encodeURIComponent(level);
-  if (term)  url += '&term='  + encodeURIComponent(term);
-  if (q)     url += '&q='     + encodeURIComponent(q);
+  if (year)    url += '&year='    + encodeURIComponent(year);
+  if (level)   url += '&level='   + encodeURIComponent(level);
+  if (term)    url += '&term='    + encodeURIComponent(term);
+  if (offense) url += '&offense=' + encodeURIComponent(offense);
+  if (q)       url += '&q='       + encodeURIComponent(q);
 
   try {
     const json = await fetchData(url);
     // Apps Script ส่งข้อมูลมาโดยข้อมูลใหม่สุดอยู่บนสุดแล้ว (reverse ฝั่ง backend)
     allRecords = json.records || [];
-    renderRecords(allRecords, { year, level, term, q });
+    renderRecords(allRecords, { year, level, term, offense, q });
   } catch(e) {
     document.getElementById('recordsList').innerHTML = '<div class="empty-state"><div class="emoji">❌</div><p>โหลดข้อมูลไม่ได้<br><small>' + escapeHtml(e.message) + '</small></p></div>';
   }
@@ -494,15 +515,31 @@ function escapeHtml(str) {
     .replace(/'/g, '&#39;');
 }
 
+// สีของ badge ประเภทความผิด แยกตามหมวด (พื้นอ่อน + ตัวหนังสือเข้ม อ่านง่ายและคุมโทน)
+const OFFENSE_COLORS = {
+  'โทรศัพท์':               { bg:'#E3F2FD', fg:'#1565C0' },
+  'ชู้สาว':                 { bg:'#FCE4EC', fg:'#AD1457' },
+  'ทะเลาะวิวาท':            { bg:'#FFF3E0', fg:'#E65100' },
+  'ขโมยของ':                { bg:'#FBE9E7', fg:'#BF360C' },
+  'ยาเสพติด':               { bg:'#FFEBEE', fg:'#B71C1C' },
+  'หนีเรียน / หนีกิจกรรม':  { bg:'#EDE7F6', fg:'#4527A0' },
+  'พฤติกรรมไม่เหมาะสม':     { bg:'#FFFDE7', fg:'#9E7B00' },
+  'อื่นๆ':                  { bg:'#ECEFF1', fg:'#37474F' }
+};
+function getOffenseColor(offense) {
+  return OFFENSE_COLORS[offense] || { bg:'#ECEFF1', fg:'#37474F' };
+}
+
 function renderRecords(records, filters) {
   const container = document.getElementById('recordsList');
   const summary   = document.getElementById('resultSummary');
 
   const tags = [];
-  if (filters.year)  tags.push('<span class="filter-tag">ปี ' + escapeHtml(filters.year) + '</span>');
-  if (filters.level) tags.push('<span class="filter-tag">' + escapeHtml(filters.level) + '</span>');
-  if (filters.term)  tags.push('<span class="filter-tag">เทอม ' + escapeHtml(filters.term) + '</span>');
-  if (filters.q)     tags.push('<span class="filter-tag">🔍 "' + escapeHtml(filters.q) + '"</span>');
+  if (filters.year)    tags.push('<span class="filter-tag">ปี ' + escapeHtml(filters.year) + '</span>');
+  if (filters.level)   tags.push('<span class="filter-tag">' + escapeHtml(filters.level) + '</span>');
+  if (filters.term)    tags.push('<span class="filter-tag">เทอม ' + escapeHtml(filters.term) + '</span>');
+  if (filters.offense) tags.push('<span class="filter-tag">' + escapeHtml(filters.offense) + '</span>');
+  if (filters.q)       tags.push('<span class="filter-tag">🔍 "' + escapeHtml(filters.q) + '"</span>');
 
   summary.style.display = 'flex';
   summary.innerHTML = '<span>พบ <strong>' + records.length + '</strong> รายการ</span>' +
@@ -513,47 +550,79 @@ function renderRecords(records, filters) {
     return;
   }
 
-  container.innerHTML = records.map(function(r) {
+  container.innerHTML = records.map(function(r, idx) {
     const date    = escapeHtml(formatDate(r['วัน/เดือน/ปี'] || ''));
     const name    = escapeHtml(r['ชื่อ-สกุล'] || '-');
     const cls     = escapeHtml(r['ชั้น'] || '-');
     const sid     = escapeHtml(r['เลขประจำตัว'] || '-');
-    const level   = escapeHtml(r['ระดับชั้น'] || '');
-    const offense = escapeHtml(r['ประเภทความผิด'] || '-');
+    const offenseRaw = r['ประเภทความผิด'] || '-';
+    const offense = escapeHtml(offenseRaw);
     const verdict = escapeHtml(r['ผลการตัดสิน'] || '-');
-    const reason  = escapeHtml(r['เหตุการณ์'] || '');
+    const reason  = escapeHtml(r['เหตุการณ์'] || '') || '<span style="color:var(--text-muted)">— ไม่มีรายละเอียดเพิ่มเติม —</span>';
     const other   = escapeHtml(r['อื่นๆ'] || '');
     const term    = r['เทอม'] ? 'เทอม ' + escapeHtml(r['เทอม']) : '';
     const year    = r['ปีการศึกษา'] ? 'ปี ' + escapeHtml(r['ปีการศึกษา']) : '';
-    const warnings = [];
+    const termYear = [term, year].filter(Boolean).join(' · ') || '-';
+    const savedAt = escapeHtml(r['เวลาที่บันทึก (ไทย)'] || '');
 
-    // ดึงผลเช็คความถูกต้องจากสูตรในคอลัมน์ "เช็คความถูกต้องของข้อมูล" (คำนวณเองในชีต ไม่ได้เขียนโดย Apps Script)
     const sheetCheck = r['เช็คความถูกต้องของข้อมูล'] || '';
-    if (sheetCheck && !String(sheetCheck).includes("✅") && String(sheetCheck).trim() !== "") {
-        warnings.push("* " + escapeHtml(sheetCheck));
-    }
+    const isInvalid = sheetCheck && !String(sheetCheck).includes("✅") && String(sheetCheck).trim() !== "";
 
-    const warnHtml = warnings.length
-      ? '<div class="record-warn">' + warnings.map(function(w){ return '⚠️ ' + w; }).join('<br>') + '</div>'
-      : '';
+    const oc = getOffenseColor(offenseRaw);
+    const offenseBadgeStyle = isInvalid
+      ? 'background:#fff; color:' + oc.fg + ';'
+      : 'background:' + oc.bg + '; color:' + oc.fg + ';';
 
-    return '<div class="record-card' + (warnings.length ? ' has-warning' : '') + '">' +
-      '<div class="record-header">' +
+    const detailId = 'detail_' + idx + '_' + Date.now();
+
+    return '<div class="record-card' + (isInvalid ? ' has-warning' : '') + '">' +
+      '<div class="record-top">' +
         '<div class="record-name">' + name + '</div>' +
+        '<span class="record-offense" style="' + offenseBadgeStyle + '">' + offense + '</span>' +
+      '</div>' +
+      '<div class="record-sub">' +
+        '<div class="record-idclass">' + sid + ' | ' + cls + '</div>' +
         '<div class="record-date">' + date + '</div>' +
       '</div>' +
-      '<div class="record-meta">' +
-        '<span class="tag tag-class">' + cls + ' · ' + sid + '</span>' +
-        (level ? '<span class="tag tag-level">' + level + '</span>' : '') +
-        '<span class="tag tag-type">' + offense + '</span>' +
-        '<span class="tag tag-result">' + verdict + '</span>' +
-        ((term || year) ? '<span class="tag tag-term">' + term + (term && year ? ' · ' : '') + year + '</span>' : '') +
+      '<div class="record-details" id="' + detailId + '">' +
+        '<div>' +
+          '<div class="record-detail-label">ผลการตัดสิน</div>' +
+          '<div class="record-detail-value" style="font-weight:700">' + verdict + '</div>' +
+        '</div>' +
+        '<div>' +
+          '<div class="record-detail-label">เหตุการณ์</div>' +
+          '<div class="record-detail-value">' + reason + '</div>' +
+        '</div>' +
+        (other ? '<div>' +
+          '<div class="record-detail-label">อื่นๆ</div>' +
+          '<div class="record-detail-value">' + other + '</div>' +
+        '</div>' : '') +
+        '<div>' +
+          '<div class="record-detail-label">เทอม / ปีการศึกษา</div>' +
+          '<div class="record-detail-value">' + termYear + '</div>' +
+        '</div>' +
+        '<div class="record-detail-row">' +
+          (isInvalid
+            ? '<span class="record-warn-badge">⚠️ ' + escapeHtml(sheetCheck) + '</span>'
+            : '<span class="record-check-ok">✓ ถูกต้อง</span>') +
+          (savedAt ? '<span class="record-savedat">บันทึกเมื่อ ' + savedAt + '</span>' : '') +
+        '</div>' +
       '</div>' +
-      (reason ? '<div class="record-note">📝 ' + reason + '</div>' : '') +
-      (other  ? '<div class="record-note" style="color:#999">💬 ' + other + '</div>' : '') +
-      warnHtml +
+      '<div class="record-toggle-row">' +
+        '<button class="record-toggle-btn" onclick="toggleDetail(this, \'' + detailId + '\')">' +
+          '<span class="btn-label">ดูรายละเอียด</span> <span class="chev">▾</span>' +
+        '</button>' +
+      '</div>' +
     '</div>';
   }).join('');
+}
+
+function toggleDetail(btn, detailId) {
+  const el = document.getElementById(detailId);
+  if (!el) return;
+  const isOpen = el.classList.toggle('open');
+  btn.classList.toggle('open', isOpen);
+  btn.querySelector('.btn-label').textContent = isOpen ? 'ซ่อนรายละเอียด' : 'ดูรายละเอียด';
 }
 
 let toastTimer;
