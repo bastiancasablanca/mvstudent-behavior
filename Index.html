@@ -242,15 +242,8 @@
           <label class="required">ประเภทความผิดนักเรียน</label>
           <select id="offenseType">
             <option value="">— เลือกประเภทความผิด —</option>
-            <option value="โทรศัพท์">📱 โทรศัพท์</option>
-            <option value="ชู้สาว">💔 ชู้สาว</option>
-            <option value="ทะเลาะวิวาท">⚡ ทะเลาะวิวาท</option>
-            <option value="ขโมยของ">🚨 ขโมยของ</option>
-            <option value="ยาเสพติด">⚠️ ยาเสพติด</option>
-            <option value="หนีเรียน / หนีกิจกรรม">🏃‍♂️ หนีเรียน / หนีกิจกรรม</option>
-            <option value="พฤติกรรมไม่เหมาะสม">👎 พฤติกรรมไม่เหมาะสม (ปลอมลายเซ็น, กลั่นแกล้ง (Bully), พูดคำหยาบ)</option>
-            <option value="ลอกการบ้าน / ทุจริตการสอบ">📝 ลอกการบ้าน / ทุจริตการสอบ</option>
-            <option value="อื่นๆ">📌 อื่นๆ</option>
+            <option value="ความผิดทั่วไป">⚠️ ความผิดทั่วไป</option>
+            <option value="ความผิดร้ายแรง">🚨 ความผิดร้ายแรง</option>
           </select>
         </div>
         <div class="form-group full">
@@ -325,15 +318,8 @@
           <input type="text" id="searchInput" placeholder="ค้นหาชื่อ, เลขประจำตัว, ชั้น..." oninput="debounceSearch()">
           <select id="f_offense" onchange="doSearch()">
             <option value="">ประเภทความผิด — ทั้งหมด</option>
-            <option value="โทรศัพท์">📱 โทรศัพท์</option>
-            <option value="ชู้สาว">💔 ชู้สาว</option>
-            <option value="ทะเลาะวิวาท">⚡ ทะเลาะวิวาท</option>
-            <option value="ขโมยของ">🚨 ขโมยของ</option>
-            <option value="ยาเสพติด">⚠️ ยาเสพติด</option>
-            <option value="หนีเรียน / หนีกิจกรรม">🏃‍♂️ หนีเรียน / หนีกิจกรรม</option>
-            <option value="พฤติกรรมไม่เหมาะสม (ปลอมลายเซ็น, กลั่นแกล้ง, พูดคำหยาบ)">👎 พฤติกรรมไม่เหมาะสม (ปลอมลายเซ็น, กลั่นแกล้ง, พูดคำหยาบ)</option>
-            <option value="ลอกการบ้าน / ทุจริตการสอบ">📝 ลอกการบ้าน / ทุจริตการสอบ</option>
-            <option value="อื่นๆ">📌 อื่นๆ</option>
+            <option value="ความผิดทั่วไป">⚠️ ความผิดทั่วไป</option>
+            <option value="ความผิดร้ายแรง">🚨 ความผิดร้ายแรง</option>
           </select>
           <button class="btn-refresh" onclick="doSearch()">🔄</button>
         </div>
