@@ -15,7 +15,6 @@
     --green-pale:     #D6EAD9; --shadow:         0 2px 16px rgba(31,64,45,0.10);
     --shadow-lg:      0 8px 40px rgba(31,64,45,0.16); --radius:         12px;
     
-    /* โทนแจ้งเตือนความผิดพลาด (เข้าธีมส้ม-แดงของระบบ) */
     --error-border:   #E53935;
     --error-bg:       #FFF5F5;
     --error-badge-bg: #FFEBEE;
@@ -59,12 +58,20 @@
   select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%23467055' stroke-width='1.7' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; padding-right:32px; cursor:pointer; }
   textarea { resize:vertical; min-height:76px; }
 
+  /* Multiple Verdict Chips */
+  .verdict-options-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); gap:8px; margin-top:4px; }
+  .verdict-chip { display:flex; align-items:center; gap:8px; padding:8px 12px; border:1.5px solid var(--border); border-radius:8px; cursor:pointer; user-select:none; font-size:13.5px; transition:all 0.15s; }
+  .verdict-chip input[type="checkbox"] { display:none; }
+  .verdict-chip:hover { border-color:var(--secondary-base); background:rgba(214,234,217,0.25); }
+  .verdict-chip.selected { border-color:var(--secondary-base); background:var(--green-pale); color:var(--primary-dark); font-weight:600; }
+  .verdict-chip .check-icon { width:15px; height:15px; border-radius:4px; border:1.5px solid var(--border); display:inline-flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; background:#fff; }
+  .verdict-chip.selected .check-icon { background:var(--secondary-base); border-color:var(--secondary-base); color:#fff; }
+
   .submit-btn { width:100%; padding:13px; background:var(--primary-dark); color:var(--text-light); border:none; border-radius:10px; font-family:'Sarabun',sans-serif; font-size:15px; font-weight:700; cursor:pointer; margin-top:18px; letter-spacing:0.3px; transition:background 0.2s, transform 0.1s; }
   .submit-btn:hover { background:var(--tertiary); }
   .submit-btn:active { transform:scale(0.99); }
   .submit-btn:disabled { background:var(--text-muted); cursor:not-allowed; }
   .submit-btn .spinner { display:none; width:17px; height:17px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite; margin:0 auto; }
-
   .submit-btn.loading .btn-text { display:none; }
   .submit-btn.loading .spinner { display:block; }
   @keyframes spin { to { transform:rotate(360deg); } }
@@ -94,12 +101,9 @@
   .filter-tag { padding:3px 9px; background:var(--green-pale); color:var(--primary-dark); border-radius:20px; font-size:11.5px; font-weight:600; }
 
   .records-list { display:flex; flex-direction:column; gap:9px; }
-  
-  /* กรอบ Record ทั่วไป */
   .record-card { background:var(--white); border:1.5px solid var(--border); border-radius:12px; padding:14px 16px; transition:border-color 0.18s, box-shadow 0.18s; position:relative; }
   .record-card:hover { border-color:var(--secondary-base); box-shadow:0 2px 10px rgba(70,112,85,0.10); }
 
-  /* สไตล์กรณีข้อมูล "ไม่ถูกต้อง" */
   .record-card.has-error {
     border-color: var(--error-border);
     border-left: 5px solid var(--error-border);
@@ -117,27 +121,8 @@
   .record-idclass { font-size:13px; color:var(--text-mid); font-weight:600; }
   .record-date { font-size:13px; color:var(--secondary-base); font-family:'IBM Plex Mono',monospace; white-space:nowrap; font-weight:600; }
 
-  /* แท็กระบุจุดที่ต้องแก้ไข */
-  .record-errors-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 8px;
-    padding-top: 6px;
-    border-top: 1px dashed rgba(229, 57, 53, 0.25);
-  }
-  .error-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 3px 9px;
-    background: var(--error-badge-bg);
-    color: var(--error-badge-fg);
-    border: 1px solid rgba(198, 40, 40, 0.2);
-    border-radius: 6px;
-    font-size: 11.5px;
-    font-weight: 700;
-  }
+  .record-errors-container { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; padding-top:6px; border-top:1px dashed rgba(229, 57, 53, 0.25); }
+  .error-tag { display:inline-flex; align-items:center; gap:4px; padding:3px 9px; background:var(--error-badge-bg); color:var(--error-badge-fg); border:1px solid rgba(198, 40, 40, 0.2); border-radius:6px; font-size:11.5px; font-weight:700; }
 
   .record-toggle-row { display:flex; justify-content:flex-end; margin-top:10px; }
   .record-toggle-btn { padding:6px 14px; background:var(--bg); border:1.5px solid var(--border); border-radius:8px; color:var(--secondary-base); font-family:'Sarabun',sans-serif; font-size:13px; font-weight:700; cursor:pointer; transition:all 0.18s; display:flex; align-items:center; gap:5px; }
@@ -153,20 +138,9 @@
   .record-detail-row { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
   .record-savedat { font-size:12.5px; color:var(--text-muted); }
 
-  .placeholder-state { text-align:center; padding:52px 16px; color:var(--text-muted); }
-  .placeholder-state .emoji { font-size:42px; margin-bottom:12px; }
+  .placeholder-state, .empty-state { text-align:center; padding:40px 16px; color:var(--text-muted); }
+  .placeholder-state .emoji, .empty-state .emoji { font-size:36px; margin-bottom:10px; }
   .placeholder-state .title { font-size:16px; font-weight:700; color:var(--primary-dark); margin-bottom:6px; }
-  .placeholder-state p { font-size:13.5px; line-height:1.7; }
-  .empty-state { text-align:center; padding:40px 16px; color:var(--text-muted); }
-  .empty-state .emoji { font-size:36px; margin-bottom:10px; }
-  .empty-state p { font-size:13.5px; }
-
-  @media (max-width:400px) {
-    .record-name { font-size:16px; }
-    .record-offense { font-size:11.5px; padding:4px 10px; }
-    .record-idclass, .record-date { font-size:12px; }
-    .record-detail-value { font-size:14px; }
-  }
 
   .toast { position:fixed; bottom:22px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--primary-dark); color:#fff; padding:11px 22px; border-radius:50px; font-size:13.5px; font-weight:600; box-shadow:var(--shadow-lg); transition:transform 0.32s cubic-bezier(0.34,1.56,0.64,1); z-index:999; white-space:nowrap; display:flex; align-items:center; gap:8px; }
   .toast.show { transform:translateX(-50%) translateY(0); }
@@ -176,6 +150,7 @@
     .form-grid { grid-template-columns:1fr; }
     .form-group.full { grid-column:1; }
     .filter-grid { grid-template-columns:1fr 1fr; }
+    .verdict-options-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -242,28 +217,32 @@
           <label class="required">ประเภทความผิดนักเรียน</label>
           <select id="offenseType">
             <option value="">— เลือกประเภทความผิด —</option>
-            <option value="ความผิดทั่วไป">⚠️ ความผิดทั่วไป</option>
-            <option value="ความผิดร้ายแรง">🚨 ความผิดร้ายแรง</option>
+            <option value="พฤติกรรมไม่เหมาะสม">⚠️ พฤติกรรมไม่เหมาะสม</option>
+            <option value="ยาเสพติด">🚨 ยาเสพติด</option>
+            <option value="ทะเลาะวิวาท">💥 ทะเลาะวิวาท</option>
+            <option value="โทรศัพท์">📱 โทรศัพท์</option>
+            <option value="หนีเรียน / หนีกิจกรรม">🏃 หนีเรียน / หนีกิจกรรม</option>
+            <option value="ขโมยของ">🕵️ ขโมยของ</option>
+            <option value="อื่นๆ">📦 อื่นๆ</option>
           </select>
         </div>
         <div class="form-group full">
           <label>เหตุการณ์ / โปรดระบุ</label>
-          <textarea id="reason" placeholder="อธิบายเหตุการณ์โดยละเอียด... (หากเลือกประเภท &quot;อื่นๆ&quot; กรุณาระบุประเภทความผิดในช่องนี้ด้วย)"></textarea>
+          <textarea id="reason" placeholder="อธิบายเหตุการณ์โดยละเอียด..."></textarea>
         </div>
         <div class="form-group full">
-          <label class="required">ผลการตัดสิน</label>
-          <select id="verdict">
-            <option value="">— เลือกผลการตัดสิน —</option>
-            <option value="ตักเตือน">🔔 ตักเตือน</option>
-            <option value="หัก 5 คะแนน">📉 หัก 5 คะแนน</option>
-            <option value="หัก 10 คะแนน">📉 หัก 10 คะแนน</option>
-            <option value="หัก 15 คะแนน">📉 หัก 15 คะแนน</option>
-            <option value="หัก 20 คะแนน">📉 หัก 20 คะแนน</option>
-            <option value="หัก 30 คะแนน">📉 หัก 30 คะแนน</option>
-            <option value="ทัณฑ์บน">📜 ทัณฑ์บน</option>
-            <option value="เขียนหนังสือขอความอนุเคราะห์ (บันทึกข้อความ)">✍️ เขียนหนังสือขอความอนุเคราะห์ (บันทึกข้อความ)</option>
-            <option value="พ้นสภาพการเป็นนักเรียน">🚫 พ้นสภาพการเป็นนักเรียน</option>
-          </select>
+          <label class="required">ผลการตัดสิน (เลือกได้มากกว่า 1 ข้อ)</label>
+          <div class="verdict-options-grid" id="verdictContainer">
+            <label class="verdict-chip"><input type="checkbox" name="verdictChoice" value="ตักเตือน"><span class="check-icon">✓</span> 🔔 ตักเตือน</label>
+            <label class="verdict-chip"><input type="checkbox" name="verdictChoice" value="หัก 5 คะแนน"><span class="check-icon">✓</span> 📉 หัก 5 คะแนน</label>
+            <label class="verdict-chip"><input type="checkbox" name="verdictChoice" value="หัก 10 คะแนน"><span class="check-icon">✓</span> 📉 หัก 10 คะแนน</label>
+            <label class="verdict-chip"><input type="checkbox" name="verdictChoice" value="หัก 15 คะแนน"><span class="check-icon">✓</span> 📉 หัก 15 คะแนน</label>
+            <label class="verdict-chip"><input type="checkbox" name="verdictChoice" value="หัก 20 คะแนน"><span class="check-icon">✓</span> 📉 หัก 20 คะแนน</label>
+            <label class="verdict-chip"><input type="checkbox" name="verdictChoice" value="หัก 30 คะแนน"><span class="check-icon">✓</span> 📉 หัก 30 คะแนน</label>
+            <label class="verdict-chip"><input type="checkbox" name="verdictChoice" value="ทัณฑ์บน"><span class="check-icon">✓</span> 📜 ทัณฑ์บน</label>
+            <label class="verdict-chip"><input type="checkbox" name="verdictChoice" value="เขียนหนังสือขอความอนุเคราะห์ (บันทึกข้อความ)"><span class="check-icon">✓</span> ✍️ เขียนหนังสือขอความอนุเคราะห์</label>
+            <label class="verdict-chip"><input type="checkbox" name="verdictChoice" value="พ้นสภาพการเป็นนักเรียน"><span class="check-icon">✓</span> 🚫 พ้นสภาพการเป็นนักเรียน</label>
+          </div>
         </div>
         <div class="form-group full">
           <label>อื่นๆ</label>
@@ -280,7 +259,6 @@
 
   <!-- RECORDS TAB -->
   <div id="tab-records" style="display:none">
-
     <div class="filter-panel">
       <div class="filter-title">กรองข้อมูล</div>
       <div class="filter-grid">
@@ -318,8 +296,13 @@
           <input type="text" id="searchInput" placeholder="ค้นหาชื่อ, เลขประจำตัว, ชั้น..." oninput="debounceSearch()">
           <select id="f_offense" onchange="doSearch()">
             <option value="">ประเภทความผิด — ทั้งหมด</option>
-            <option value="ความผิดทั่วไป">⚠️ ความผิดทั่วไป</option>
-            <option value="ความผิดร้ายแรง">🚨 ความผิดร้ายแรง</option>
+            <option value="พฤติกรรมไม่เหมาะสม">⚠️ พฤติกรรมไม่เหมาะสม</option>
+            <option value="ยาเสพติด">🚨 ยาเสพติด</option>
+            <option value="ทะเลาะวิวาท">💥 ทะเลาะวิวาท</option>
+            <option value="โทรศัพท์">📱 โทรศัพท์</option>
+            <option value="หนีเรียน / หนีกิจกรรม">🏃 หนีเรียน / หนีกิจกรรม</option>
+            <option value="ขโมยของ">🕵️ ขโมยของ</option>
+            <option value="อื่นๆ">📦 อื่นๆ</option>
           </select>
           <button class="btn-refresh" onclick="doSearch()">🔄</button>
         </div>
@@ -333,7 +316,6 @@
       <div class="title">เลือกเงื่อนไขและกดค้นหา</div>
       <p>ระบุปีการศึกษาและระดับชั้นที่ต้องการ<br>แล้วกด "ค้นหา" เพื่อแสดงบันทึก</p>
     </div>
-
   </div>
 
 </div>
@@ -341,7 +323,6 @@
 <div class="toast" id="toast"><span id="toastMsg"></span></div>
 
 <script>
-// --- วาง URL จากการ Deploy ของ Web App (คงเดิม ไม่เปลี่ยน) ---
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzXd_-XWtFXsKH95gu13fV-czxl64H5CnMcGlUGDaish5F1S-NugPCWJxTKWiApQLNd/exec';
 
 let allRecords = [];
@@ -404,6 +385,11 @@ function cleanStudentName(name) {
     .trim();
 }
 
+function getSelectedVerdicts() {
+  const checkedBoxes = document.querySelectorAll('input[name="verdictChoice"]:checked');
+  return Array.from(checkedBoxes).map(cb => cb.value).join(' ');
+}
+
 function init() {
   const y = getCurrentThaiAcademicYear();
   document.getElementById('headerSub').textContent = 'โรงเรียนมารีวิทย์บ่อวิน · ปีการศึกษา ' + y;
@@ -414,6 +400,12 @@ function init() {
   const nameInput = document.getElementById('name');
   nameInput.addEventListener('blur', () => {
     nameInput.value = cleanStudentName(nameInput.value);
+  });
+
+  document.querySelectorAll('input[name="verdictChoice"]').forEach(cb => {
+    cb.addEventListener('change', function() {
+      this.closest('.verdict-chip').classList.toggle('selected', this.checked);
+    });
   });
 }
 
@@ -429,7 +421,10 @@ function resetForm() {
   document.getElementById('classPrefix').value='ม.';
   document.getElementById('namePrefix').value='ด.ช.';
   document.getElementById('offenseType').value='';
-  document.getElementById('verdict').value='';
+  document.querySelectorAll('input[name="verdictChoice"]').forEach(cb => {
+    cb.checked = false;
+    cb.closest('.verdict-chip').classList.remove('selected');
+  });
   document.getElementById('date').value = new Date().toISOString().split('T')[0];
 }
 
@@ -439,6 +434,7 @@ async function submitRecord() {
   const classRoom   = document.getElementById('classRoom').value.trim();
   const namePrefix  = document.getElementById('namePrefix').value;
   const nameRaw     = document.getElementById('name').value.trim();
+  const verdictJoined = getSelectedVerdicts();
 
   const data = {
     date:        document.getElementById('date').value,
@@ -446,7 +442,7 @@ async function submitRecord() {
     name:        nameRaw ? (namePrefix + ' ' + nameRaw) : '',
     class:       classRoom ? (classPrefix + classRoom) : '',
     offenseType: offenseVal,
-    verdict:     document.getElementById('verdict').value,
+    verdict:     verdictJoined,
     reason:      document.getElementById('reason').value.trim(),
     other:       document.getElementById('other').value.trim()
   };
@@ -570,35 +566,26 @@ function escapeHtml(str) {
 
 const OFFENSE_COLORS = {
   'โทรศัพท์':                { bg:'#E3F2FD', fg:'#1565C0' },
-  'ชู้สาว':                  { bg:'#FCE4EC', fg:'#AD1457' },
   'ทะเลาะวิวาท':             { bg:'#FFF3E0', fg:'#E65100' },
   'ขโมยของ':                 { bg:'#FBE9E7', fg:'#BF360C' },
   'ยาเสพติด':                { bg:'#FFEBEE', fg:'#B71C1C' },
   'หนีเรียน / หนีกิจกรรม':   { bg:'#EDE7F6', fg:'#4527A0' },
   'พฤติกรรมไม่เหมาะสม':       { bg:'#FFFDE7', fg:'#9E7B00' },
-  'พฤติกรรมไม่เหมาะสม (ปลอมลายเซ็น, กลั่นแกล้ง, พูดคำหยาบ)': { bg:'#FFFDE7', fg:'#9E7B00' },
-  'ลอกการบ้าน / ทุจริตการสอบ': { bg:'#E0F2F1', fg:'#00695C' },
   'อื่นๆ':                   { bg:'#ECEFF1', fg:'#37474F' }
 };
 function getOffenseColor(offense) {
   return OFFENSE_COLORS[offense] || { bg:'#ECEFF1', fg:'#37474F' };
 }
 
-// แยกและสร้าง Badges จากข้อความในคอลัมน์ "เช็คความถูกต้องของข้อมูล"
 function parseErrorTags(checkText) {
   if (!checkText || checkText.trim() === 'ถูกต้อง') return [];
-  
-  // ตรวจหาข้อความในวงเล็บ เช่น "ไม่ถูกต้อง (เลขประจำตัวผิด, เลขชั้นผิด)"
   const match = checkText.match(/\(([^)]+)\)/);
   if (match && match[1]) {
     return match[1].split(',').map(s => s.trim()).filter(Boolean);
   }
-  
-  // กรณีระบุ "ไม่ถูกต้อง" ล้วนๆ ไม่มีวงเล็บ
   if (checkText.includes('ไม่ถูกต้อง')) {
     return ['ข้อมูลไม่ถูกต้อง'];
   }
-  
   return [];
 }
 
@@ -637,7 +624,6 @@ function renderRecords(records, filters) {
     const yearTerm = [year, term].filter(Boolean).join(' · ') || '-';
     const savedAt  = formatSavedAt(r['เวลาที่บันทึก (ไทย)'] || '');
 
-    // ตรวจสอบความถูกต้องของข้อมูลจากคอลัมน์ M
     const checkStatus = String(r['เช็คความถูกต้องของข้อมูล'] || '').trim();
     const errorTags   = parseErrorTags(checkStatus);
     const hasError    = errorTags.length > 0;
@@ -646,7 +632,6 @@ function renderRecords(records, filters) {
     const offenseBadgeStyle = 'background:' + oc.bg + '; color:' + oc.fg + ';';
     const detailId = 'detail_' + idx + '_' + Date.now();
 
-    // สร้าง HTML แท็กสีแดงระบุข้อผิดพลาด
     let errorBadgesHtml = '';
     if (hasError) {
       errorBadgesHtml = '<div class="record-errors-container">' +
