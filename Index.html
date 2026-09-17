@@ -22,10 +22,18 @@
   header { background: var(--primary-dark); position: relative; overflow: hidden; }
   header::before { content:''; position:absolute; top:-50px; right:-50px; width:200px; height:200px; border-radius:50%; background:rgba(255,255,255,0.03); }
   header::after  { content:''; position:absolute; bottom:-30px; left:60px; width:120px; height:120px; border-radius:50%; background:rgba(255,255,255,0.025); }
-  .header-inner { position:relative; z-index:1; max-width:720px; margin:0 auto; padding:22px 20px 18px; display:flex; align-items:center; gap:14px; }
-  .header-logo  { width:46px; height:46px; background:var(--secondary-base); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
-  .header-text h1 { font-size:17px; font-weight:700; color:var(--text-light); line-height:1.3; }
-  .header-text p  { font-size:12px; color:var(--green-pale); margin-top:2px; font-family:'IBM Plex Mono',monospace; letter-spacing:0.4px; opacity:0.85; }
+  .header-inner { position:relative; z-index:1; max-width:720px; margin:0 auto; padding:18px 20px 14px; display:flex; align-items:center; justify-content:space-between; gap:14px; }
+  .header-left { display:flex; align-items:center; gap:12px; }
+  .header-logo  { width:44px; height:44px; background:var(--secondary-base); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+  .header-text h1 { font-size:16px; font-weight:700; color:var(--text-light); line-height:1.3; }
+  .header-text p  { font-size:12px; color:var(--green-pale); margin-top:2px; font-family:'IBM Plex Mono',monospace; opacity:0.85; }
+
+  /* แสดงข้อมูลผู้ใช้งานมุมบนขวา */
+  .user-badge { display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.12); padding:5px 11px; border-radius:20px; flex-shrink:0; }
+  .user-avatar { width:26px; height:26px; border-radius:50%; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; }
+  .user-meta { display:flex; flex-direction:column; text-align:left; }
+  .user-name { font-size:12px; font-weight:700; color:#fff; max-width:110px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .user-role { font-size:10px; color:var(--green-pale); }
 
   .tabs { max-width:720px; margin:0 auto; display:flex; background:var(--tertiary); }
   .tab-btn { flex:1; padding:11px 0; background:transparent; border:none; color:var(--green-pale); font-family:'Sarabun',sans-serif; font-size:13.5px; font-weight:600; cursor:pointer; transition:all 0.2s; position:relative; opacity:0.8; }
@@ -43,25 +51,10 @@
   .form-group { display:flex; flex-direction:column; gap:5px; }
   .form-group.full { grid-column:1/-1; }
   
-  /* แถวข้อมูลแรก: วันที่ (ขนาดพอดีปฏิทิน 270px), ชั้น, เลขประจำตัว */
-  .student-top-row {
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-    grid-column: 1 / -1;
-  }
-  .student-top-row .field-date {
-    width: 270px;
-    flex-shrink: 0;
-  }
-  .student-top-row .field-class {
-    width: 175px;
-    flex-shrink: 0;
-  }
-  .student-top-row .field-id {
-    flex: 1;
-    min-width: 110px;
-  }
+  .student-top-row { display: flex; gap: 12px; align-items: flex-start; grid-column: 1 / -1; }
+  .student-top-row .field-date { width: 270px; flex-shrink: 0; }
+  .student-top-row .field-class { width: 175px; flex-shrink: 0; }
+  .student-top-row .field-id { flex: 1; min-width: 110px; }
 
   label { font-size:12.5px; font-weight:600; color:var(--text-mid); letter-spacing:0.2px; }
   .required::after { content:' *'; color:var(--accent); }
@@ -75,7 +68,6 @@
   select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%23467055' stroke-width='1.7' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; padding-right:32px; cursor:pointer; }
   textarea { resize:vertical; min-height:76px; }
 
-  /* ตัวเลือกผลการตัดสินแบบหลายข้อ */
   .verdict-options-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); gap:8px; margin-top:4px; }
   .verdict-chip { display:flex; align-items:center; gap:8px; padding:8px 12px; border:1.5px solid var(--border); border-radius:8px; cursor:pointer; user-select:none; font-size:13.5px; transition:all 0.15s; }
   .verdict-chip input[type="checkbox"] { display:none; }
@@ -121,16 +113,8 @@
   .record-card { background:var(--white); border:1.5px solid var(--border); border-radius:12px; padding:14px 16px; transition:border-color 0.18s, box-shadow 0.18s; position:relative; }
   .record-card:hover { border-color:var(--secondary-base); box-shadow:0 2px 10px rgba(70,112,85,0.10); }
 
-  /* แสดงกรอบสีแดงเมื่อข้อมูลผิดพลาด */
-  .record-card.has-error {
-    border-color: var(--error-border);
-    border-left: 5px solid var(--error-border);
-    background: #fffdfd;
-  }
-  .record-card.has-error:hover {
-    border-color: var(--error-border);
-    box-shadow: 0 2px 12px rgba(229, 57, 53, 0.18);
-  }
+  .record-card.has-error { border-color: var(--error-border); border-left: 5px solid var(--error-border); background: #fffdfd; }
+  .record-card.has-error:hover { border-color: var(--error-border); box-shadow: 0 2px 12px rgba(229, 57, 53, 0.18); }
 
   .record-top { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
   .record-name { font-weight:700; font-size:18px; color:var(--primary-dark); line-height:1.35; flex:1; min-width:0; word-break:break-word; }
@@ -151,13 +135,7 @@
   .record-detail-value { font-size:15px; color:var(--text-primary); line-height:1.65; }
   .record-detail-verdict { font-size:16px; color:var(--accent); font-weight:700; }
 
-  /* แถวระนาบเดียวกัน: ผลการตัดสิน (ซ้าย) กับ ปีการศึกษา / เทอม (ขวา) */
-  .record-verdict-year-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 12px;
-  }
+  .record-verdict-year-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
   .record-verdict-year-row .verdict-side { flex: 1; min-width: 0; }
   .record-verdict-year-row .year-side { text-align: right; flex-shrink: 0; }
 
@@ -172,7 +150,6 @@
   .toast.show { transform:translateX(-50%) translateY(0); }
   .toast.error { background:#c62828; }
 
-  /* Responsive: เมื่อจอมือถือเล็กกว่า 600px */
   @media (max-width:600px) {
     .student-top-row { flex-wrap: wrap; }
     .student-top-row .field-date { width: 100%; }
@@ -180,14 +157,9 @@
     .student-top-row .field-id { flex: 1; width: auto; }
     .filter-grid { grid-template-columns: 1fr 1fr; }
     .verdict-options-grid { grid-template-columns: 1fr; }
-    
-    .record-verdict-year-row {
-      flex-direction: column;
-      gap: 10px;
-    }
-    .record-verdict-year-row .year-side {
-      text-align: left;
-    }
+    .record-verdict-year-row { flex-direction: column; gap: 10px; }
+    .record-verdict-year-row .year-side { text-align: left; }
+    .user-name { max-width:70px; }
   }
 </style>
 </head>
@@ -195,15 +167,27 @@
 
 <header>
   <div class="header-inner">
-    <div class="header-logo">📋</div>
-    <div class="header-text">
-      <h1>บันทึกพฤติกรรมนักเรียน</h1>
-      <p id="headerSub">โรงเรียนมารีวิทย์บ่อวิน</p>
+    <div class="header-left">
+      <div class="header-logo">📋</div>
+      <div class="header-text">
+        <h1>บันทึกพฤติกรรมนักเรียน</h1>
+        <p id="headerSub">โรงเรียนมารีวิทย์บ่อวิน</p>
+      </div>
+    </div>
+    <div class="user-badge" title="<?= userEmail ?>">
+      <div class="user-avatar"><?= username.charAt(0).toUpperCase() ?></div>
+      <div class="user-meta">
+        <span class="user-name"><?= username ?></span>
+        <span class="user-role"><?= isAdmin ? 'ผู้ดูแลระบบ' : 'ครูปกครอง' ?></span>
+      </div>
     </div>
   </div>
+  
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab('form')">📝 บันทึกข้อมูล</button>
-    <button class="tab-btn" onclick="switchTab('records')">📂 ดูบันทึกทั้งหมด</button>
+    <? if (isAdmin) { ?>
+      <button class="tab-btn" onclick="switchTab('records')">📂 ดูบันทึกทั้งหมด</button>
+    <? } ?>
   </div>
 </header>
 
@@ -214,8 +198,6 @@
     <div class="card">
       <div class="card-title">ข้อมูลนักเรียน</div>
       <div class="form-grid">
-        
-        <!-- แถวบนสุด: วันที่ (กว้าง 270px ตรงกับปฏิทิน), ชั้น, เลขประจำตัว -->
         <div class="student-top-row">
           <div class="form-group field-date">
             <label class="required">วันที่</label>
@@ -301,7 +283,8 @@
     </div>
   </div>
 
-  <!-- RECORDS TAB -->
+  <? if (isAdmin) { ?>
+  <!-- RECORDS TAB (เฉพาะ Admin) -->
   <div id="tab-records" style="display:none">
     <div class="filter-panel">
       <div class="filter-title">กรองข้อมูล</div>
@@ -337,7 +320,7 @@
     <div id="resultsArea" style="display:none">
       <div class="card" style="padding:16px 18px">
         <div class="search-row">
-          <input type="text" id="searchInput" placeholder="ค้นหาชื่อ, เลขประจำตัว, ชั้น..." oninput="debounceSearch()">
+          <input type="text" id="searchInput" placeholder="ค้นหาชื่อ, เลขประจำตัว, ชั้น, ผู้บันทึก..." oninput="debounceSearch()">
           <select id="f_offense" onchange="doSearch()">
             <option value="">ประเภทความผิด — ทั้งหมด</option>
             <option value="พฤติกรรมไม่เหมาะสม">⚠️ พฤติกรรมไม่เหมาะสม</option>
@@ -361,14 +344,13 @@
       <p>ระบุปีการศึกษาและระดับชั้นที่ต้องการ<br>แล้วกด "ค้นหา" เพื่อแสดงบันทึก</p>
     </div>
   </div>
+  <? } ?>
 
 </div>
 
 <div class="toast" id="toast"><span id="toastMsg"></span></div>
 
 <script>
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzXd_-XWtFXsKH95gu13fV-czxl64H5CnMcGlUGDaish5F1S-NugPCWJxTKWiApQLNd/exec';
-
 let allRecords = [];
 let searchTimer = null;
 
@@ -405,6 +387,7 @@ function getCurrentThaiAcademicYear() {
 function buildYearDropdown() {
   const cur = getCurrentThaiAcademicYear();
   const sel = document.getElementById('f_year');
+  if (!sel) return;
   sel.innerHTML = '<option value="">ทั้งหมด</option>';
   for (let y = cur; y >= 2564; y--) {
     const o = document.createElement('option');
@@ -454,9 +437,17 @@ function init() {
 }
 
 function switchTab(tab) {
-  ['form','records'].forEach(t => { document.getElementById('tab-'+t).style.display = (t===tab) ? 'block' : 'none'; });
+  ['form','records'].forEach(t => { 
+    const el = document.getElementById('tab-'+t);
+    if (el) el.style.display = (t===tab) ? 'block' : 'none'; 
+  });
   document.querySelectorAll('.tab-btn').forEach((btn, i) => { btn.classList.toggle('active', ['form','records'][i] === tab); });
-  if (tab === 'records') { document.getElementById('resultsArea').style.display = 'none'; document.getElementById('recordsPlaceholder').style.display = 'block'; }
+  if (tab === 'records') {
+    const resArea = document.getElementById('resultsArea');
+    const plArea  = document.getElementById('recordsPlaceholder');
+    if (resArea) resArea.style.display = 'none';
+    if (plArea) plArea.style.display = 'block';
+  }
 }
 
 function resetForm() {
@@ -472,7 +463,7 @@ function resetForm() {
   document.getElementById('date').value = new Date().toISOString().split('T')[0];
 }
 
-async function submitRecord() {
+function submitRecord() {
   const offenseVal = document.getElementById('offenseType').value;
   const classPrefix = document.getElementById('classPrefix').value;
   const classRoom   = document.getElementById('classRoom').value.trim();
@@ -501,24 +492,22 @@ async function submitRecord() {
   const btn = document.getElementById('submitBtn');
   btn.classList.add('loading'); btn.disabled = true;
 
-  try {
-    const response = await fetch(SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(data)
-    });
-    const result = await response.json();
-    if (result.status === 'ok') {
-      showToast('✅ บันทึกข้อมูลสำเร็จ');
-      resetForm();
-    } else {
-      showToast('❌ ' + (result.message || 'เกิดข้อผิดพลาด'), true);
-    }
-  } catch(e) {
-    showToast('❌ ไม่สามารถเชื่อมต่อได้', true);
-  } finally {
-    btn.classList.remove('loading'); btn.disabled = false;
-  }
+  // ส่งบันทึกผ่าน google.script.run ไปยัง Apps Script โดยตรง
+  google.script.run
+    .withSuccessHandler(function(result) {
+      btn.classList.remove('loading'); btn.disabled = false;
+      if (result.status === 'ok') {
+        showToast('✅ บันทึกข้อมูลสำเร็จ');
+        resetForm();
+      } else {
+        showToast('❌ ' + (result.message || 'เกิดข้อผิดพลาด'), true);
+      }
+    })
+    .withFailureHandler(function(err) {
+      btn.classList.remove('loading'); btn.disabled = false;
+      showToast('❌ บันทึกไม่สำเร็จ: ' + err.message, true);
+    })
+    .saveRecordServer(data);
 }
 
 function resetFilters() {
@@ -532,7 +521,7 @@ function resetFilters() {
   allRecords = [];
 }
 
-async function doSearch() {
+function doSearch() {
   const year    = document.getElementById('f_year').value;
   const level   = document.getElementById('f_level').value;
   const term    = document.getElementById('f_term').value;
@@ -544,31 +533,15 @@ async function doSearch() {
   document.getElementById('resultSummary').style.display = 'none';
   document.getElementById('recordsList').innerHTML = '<div class="empty-state"><div class="emoji">⏳</div><p>กำลังโหลด...</p></div>';
 
-  let url = SCRIPT_URL + '?dummy=1';
-  if (year)    url += '&year='    + encodeURIComponent(year);
-  if (level)   url += '&level='   + encodeURIComponent(level);
-  if (term)    url += '&term='    + encodeURIComponent(term);
-  if (offense) url += '&offense=' + encodeURIComponent(offense);
-  if (q)       url += '&q='       + encodeURIComponent(q);
-
-  try {
-    const json = await fetchData(url);
-    allRecords = json.records || [];
-    renderRecords(allRecords, { year, level, term, offense, q });
-  } catch(e) {
-    document.getElementById('recordsList').innerHTML = '<div class="empty-state"><div class="emoji">❌</div><p>โหลดข้อมูลไม่ได้<br><small>' + escapeHtml(e.message) + '</small></p></div>';
-  }
-}
-
-function fetchData(url) {
-  return new Promise(function(resolve, reject) {
-    const cb = 'cb_' + Date.now();
-    const script = document.createElement('script');
-    window[cb] = function(data) { delete window[cb]; document.body.removeChild(script); resolve(data); };
-    script.onerror = function() { delete window[cb]; document.body.removeChild(script); reject(new Error('โหลดข้อมูลไม่ได้')); };
-    script.src = url + '&callback=' + cb;
-    document.body.appendChild(script);
-  });
+  google.script.run
+    .withSuccessHandler(function(json) {
+      allRecords = json.records || [];
+      renderRecords(allRecords, { year, level, term, offense, q });
+    })
+    .withFailureHandler(function(err) {
+      document.getElementById('recordsList').innerHTML = '<div class="empty-state"><div class="emoji">❌</div><p>โหลดข้อมูลไม่ได้<br><small>' + escapeHtml(err.message) + '</small></p></div>';
+    })
+    .getRecordsServer({ year: year, level: level, term: term, offense: offense, q: q });
 }
 
 function debounceSearch() {
@@ -617,6 +590,7 @@ const OFFENSE_COLORS = {
   'พฤติกรรมไม่เหมาะสม':       { bg:'#FFFDE7', fg:'#9E7B00' },
   'อื่นๆ':                   { bg:'#ECEFF1', fg:'#37474F' }
 };
+
 function getOffenseColor(offense) {
   return OFFENSE_COLORS[offense] || { bg:'#ECEFF1', fg:'#37474F' };
 }
@@ -649,19 +623,20 @@ function renderRecords(records, filters) {
   }
 
   container.innerHTML = records.map(function(r, idx) {
-    const date     = escapeHtml(formatDate(r['วัน/เดือน/ปี'] || ''));
-    const name     = escapeHtml(r['ชื่อ-สกุล'] || '-');
-    const cls      = escapeHtml(r['ชั้น'] || '-');
-    const sid      = escapeHtml(r['เลขประจำตัว'] || '-');
-    const offenseRaw = r['ประเภทความผิด'] || '-';
-    const offense  = escapeHtml(offenseRaw);
-    const verdict  = escapeHtml(r['ผลการตัดสิน'] || '-');
-    const reason   = escapeHtml(r['เหตุการณ์'] || '') || '<span style="color:var(--text-muted)">— ไม่มีรายละเอียดเพิ่มเติม —</span>';
-    const other    = escapeHtml(r['อื่นๆ'] || '');
-    const term     = r['เทอม'] ? 'เทอม ' + escapeHtml(r['เทอม']) : '';
-    const year     = r['ปีการศึกษา'] ? 'ปี ' + escapeHtml(r['ปีการศึกษา']) : '';
-    const yearTerm = [year, term].filter(Boolean).join(' · ') || '-';
-    const savedAt  = formatSavedAt(r['เวลาที่บันทึก (ไทย)'] || '');
+    const date        = escapeHtml(formatDate(r['วัน/เดือน/ปี'] || ''));
+    const name        = escapeHtml(r['ชื่อ-สกุล'] || '-');
+    const cls         = escapeHtml(r['ชั้น'] || '-');
+    const sid         = escapeHtml(r['เลขประจำตัว'] || '-');
+    const offenseRaw  = r['ประเภทความผิด'] || '-';
+    const offense     = escapeHtml(offenseRaw);
+    const verdict     = escapeHtml(r['ผลการตัดสิน'] || '-');
+    const reason      = escapeHtml(r['เหตุการณ์'] || '') || '<span style="color:var(--text-muted)">— ไม่มีรายละเอียดเพิ่มเติม —</span>';
+    const other       = escapeHtml(r['อื่นๆ'] || '');
+    const term        = r['เทอม'] ? 'เทอม ' + escapeHtml(r['เทอม']) : '';
+    const year        = r['ปีการศึกษา'] ? 'ปี ' + escapeHtml(r['ปีการศึกษา']) : '';
+    const yearTerm    = [year, term].filter(Boolean).join(' · ') || '-';
+    const savedAt     = formatSavedAt(r['เวลาที่บันทึก (ไทย)'] || '');
+    const recorder    = escapeHtml(r['ผู้บันทึก'] || '-');
 
     const checkStatus = String(r['เช็คความถูกต้องของข้อมูล'] || '').trim();
     const hasError    = checkIsRecordError(checkStatus);
@@ -688,8 +663,6 @@ function renderRecords(records, filters) {
           '<div class="record-detail-label">อื่นๆ</div>' +
           '<div class="record-detail-value">' + other + '</div>' +
         '</div>' : '') +
-        
-        /* จัดวางผลการตัดสิน และ ปีการศึกษา / เทอม ให้อยู่ในระนาบเดียวกัน */
         '<div class="record-verdict-year-row">' +
           '<div class="verdict-side">' +
             '<div class="record-detail-label">ผลการตัดสิน</div>' +
@@ -700,10 +673,9 @@ function renderRecords(records, filters) {
             '<div class="record-detail-value">' + yearTerm + '</div>' +
           '</div>' +
         '</div>' +
-
-        (savedAt ? '<div class="record-detail-row">' +
-          '<span class="record-savedat">บันทึกเมื่อ ' + savedAt + '</span>' +
-        '</div>' : '') +
+        '<div class="record-detail-row" style="margin-top:4px;">' +
+          '<span class="record-savedat">👤 ผู้บันทึก: <strong>' + recorder + '</strong>' + (savedAt ? ' • ' + savedAt : '') + '</span>' +
+        '</div>' +
       '</div>' +
       '<div class="record-toggle-row">' +
         '<button class="record-toggle-btn" onclick="toggleDetail(this, \'' + detailId + '\')">' +
