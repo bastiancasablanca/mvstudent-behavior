@@ -6,35 +6,58 @@
 <title>QR Code บันทึกพฤติกรรมนักเรียน</title>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
+  :root {
+    --teal-deep:      #0A3D3F; --teal-base:      #0E5457;
+    --gold:           #2FA8A0; --gold-soft:      #5FC9C1; --gold-dim: rgba(47,168,160,0.35);
+    --text-primary:   #1E3A3A; --text-light:     #0A3D3F; --text-mid: #3E6B6B; --text-muted: #6E9494;
+    --glass-fill:     rgba(255,255,255,0.68); --glass-border: rgba(255,255,255,0.55);
+    --shadow-lg:      0 16px 56px rgba(6,40,42,0.24);
+    --error-border:   #E5484D;
+  }
+  * { box-sizing: border-box; }
   body {
     margin: 0;
     padding: 30px 16px;
-    background: #E8EFEA;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     font-family: 'Sarabun', sans-serif;
+    background:
+      radial-gradient(ellipse 900px 700px at 12% -5%, rgba(95,201,193,0.35), transparent 60%),
+      radial-gradient(ellipse 800px 600px at 95% 15%, rgba(120,210,220,0.28), transparent 55%),
+      radial-gradient(ellipse 700px 900px at 80% 100%, rgba(47,168,160,0.25), transparent 60%),
+      linear-gradient(160deg, #0A3D3F 0%, #0E5457 45%, #0B4749 100%);
+    background-attachment: fixed;
   }
   .qr-card {
-    background: #ffffff;
+    background: var(--glass-fill);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
     width: 360px;
     border-radius: 24px;
-    box-shadow: 0 16px 40px rgba(31, 64, 45, 0.18);
+    box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255,255,255,0.7), inset 0 -1px 0 rgba(255,255,255,0.1);
     overflow: hidden;
     text-align: center;
-    border: 1.5px solid #C8DAD0;
+    border: 1px solid var(--glass-border);
   }
   .card-header {
-    background: #1F402D;
+    background: linear-gradient(135deg, rgba(10,61,63,0.55), rgba(10,61,63,0.35));
+    backdrop-filter: blur(24px) saturate(160%);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
     color: #ffffff;
     padding: 24px 20px 20px;
     position: relative;
+    overflow: hidden;
   }
+  .card-header::before { content:''; position:absolute; top:-50px; right:-40px; width:180px; height:180px; border-radius:50%; background:radial-gradient(circle, rgba(95,201,193,0.35), transparent 70%); }
+  .card-header::after  { content:''; position:absolute; bottom:-30px; left:-20px; width:140px; height:140px; border-radius:50%; background:radial-gradient(circle, rgba(120,210,220,0.2), transparent 70%); }
   .badge {
+    position: relative; z-index: 1;
     display: inline-block;
-    background: rgba(255, 255, 255, 0.12);
-    color: #D6EAD9;
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #E8FBF9;
     font-size: 11.5px;
     padding: 4px 12px;
     border-radius: 20px;
@@ -42,27 +65,18 @@
     margin-bottom: 8px;
     letter-spacing: 0.5px;
   }
-  .card-header h2 {
-    font-size: 18px;
-    margin: 0;
-    font-weight: 700;
-  }
-  .card-header p {
-    font-size: 13px;
-    color: #D6EAD9;
-    margin: 4px 0 0;
-    opacity: 0.9;
-  }
+  .card-header h2 { position: relative; z-index: 1; font-size: 18px; margin: 0; font-weight: 700; }
+  .card-header p { position: relative; z-index: 1; font-size: 13px; color: rgba(255,255,255,0.85); margin: 4px 0 0; opacity: 0.95; }
   .qr-body {
     padding: 24px 24px 20px;
   }
   .qr-frame {
-    background: #F4F8F5;
+    background: rgba(255,255,255,0.55);
     padding: 14px;
     border-radius: 18px;
-    border: 2px dashed #467055;
+    border: 2px dashed var(--gold-dim);
     display: inline-block;
-    box-shadow: inset 0 2px 8px rgba(0,0,0,0.04);
+    box-shadow: inset 0 2px 8px rgba(6,40,42,0.08);
   }
   .qr-frame img {
     width: 220px;
@@ -72,8 +86,8 @@
   }
   .link-pill {
     margin-top: 18px;
-    background: #FEF0EB;
-    border: 1.5px solid #F05A28;
+    background: rgba(47,168,160,0.14);
+    border: 1.5px solid var(--gold);
     padding: 8px 14px;
     border-radius: 50px;
     display: inline-flex;
@@ -82,11 +96,11 @@
   }
   .link-pill span {
     font-size: 12px;
-    color: #333;
+    color: var(--text-primary);
     font-weight: 600;
   }
   .link-pill a {
-    color: #F05A28;
+    color: var(--gold);
     font-family: 'IBM Plex Mono', monospace;
     font-size: 13.5px;
     font-weight: 600;
@@ -95,19 +109,19 @@
   .instructions {
     margin-top: 14px;
     padding: 10px 14px;
-    background: #F9FBF9;
+    background: rgba(255,255,255,0.5);
     border-radius: 12px;
-    border: 1px solid #E0ECE3;
+    border: 1px solid rgba(20,80,80,0.14);
     font-size: 12px;
-    color: #4a6655;
+    color: var(--text-mid);
     line-height: 1.5;
   }
   .instructions strong {
-    color: #1F402D;
+    color: var(--text-light);
   }
   .footer-note {
     font-size: 11px;
-    color: #8fa898;
+    color: var(--text-muted);
     padding: 0 0 16px;
   }
 </style>
@@ -123,13 +137,13 @@
 
   <div class="qr-body">
     <div class="qr-frame">
-      <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://tinyurl.com/3nma6bm2" alt="QR Code">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://students-bhv-mvschool.netlify.app/" alt="QR Code">
     </div>
 
     <div>
       <div class="link-pill">
-        <span>🔗 ลิงก์ย่อ:</span>
-        <a href="https://tinyurl.com/3nma6bm2" target="_blank">tinyurl.com/3nma6bm2</a>
+        <span>🔗 ลิงก์:</span>
+        <a href="https://students-bhv-mvschool.netlify.app/" target="_blank">students-bhv-mvschool.netlify.app</a>
       </div>
     </div>
 
